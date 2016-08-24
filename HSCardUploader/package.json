@@ -1,0 +1,17 @@
+{
+  "name": "hs_card_uploader",
+  "version": "1.0.0",
+  "description": "",
+  "main": "uploader.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "app-root-path": "^1.2.1",
+    "express": "^4.14.0",
+    "lodash": "^4.13.1",
+    "mongodb": "^2.2.1"
+  }
+}

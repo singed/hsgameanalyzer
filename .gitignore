@@ -6,3 +6,4 @@ obj
 /.vs
 /HSGameAnalyzer.sln.DotSettings.user
 /HSWebClient/bower_components
+/HSCardUploader/node_modules
