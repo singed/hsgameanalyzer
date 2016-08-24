@@ -1,0 +1,21 @@
+{
+  "name": "HSWebClient",
+  "version": "0.0.0",
+  "authors": [
+    "Alex P <parfenchuks@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.5.7",
+    "signalr": "^2.2.0",
+    "bootstrap": "^3.3.7",
+    "tooltip": "angular-tooltip#^0.1.1"
+  }
+}
