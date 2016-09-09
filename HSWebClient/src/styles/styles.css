@@ -1,0 +1,52 @@
+﻿  .navbar-inverse {
+            background-color: #222222;
+        }
+         .card-image-tooltip + .tooltip > .tooltip-inner {
+             background-color: rgba(255,255,255, 0);
+             margin-top: -40px;
+             margin-left: 30px;
+         }
+
+        div.card-row .cost, div.deck-row .percentage {
+            background: #286eb2;
+            color: #fff;
+            text-align: center;
+        }
+         div.card-row .cost {
+             height: 28px;
+         }
+        .card-image {
+            float: right;
+            width: 130px;
+            opacity: 0.5;
+            height: 26px;
+        }
+
+        div.card-row .count, div.deck-row .type {
+            background: #2d2d2d;
+            color: #cbb800;
+            text-align: center;
+        }
+        div.deck-row .type {
+            color: #00bc8c;
+        }
+
+        .hide-overflow {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hs-list-item {
+            padding-top: 0px;
+            padding-bottom: 0px;
+            cursor: pointer;
+        }
+
+        .hide-card {
+            opacity: 0.3;
+        }
+
+        .blur-card {
+            opacity: 0.8;
+        }

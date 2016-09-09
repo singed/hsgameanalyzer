@@ -161,14 +161,14 @@
                         _.each(item.cards, function (card) {
                             card.timesPlayed = 0;
                             card.image = "<img style='margin-bottom:50pxl' src='http://wow.zamimg.com/images/hearthstone/cards/enus/medium/" + card.cardId + ".png' />";
-                            card.imageUrl = "/src/images/" + card.cardId + ".png";
+                            card.imageUrl = "/src/images/cards/" + card.cardId + ".png";
                         });
                         return item;
                     });
                     $scope.$apply();
                     $('li[data-toggle="tooltip"]').tooltip({
                         animated: 'fade',
-                        placement: 'bottom',
+                        placement: 'top',
                         html: true,
                     });
                 }).fail(function (err) {
