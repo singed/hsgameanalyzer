@@ -4,6 +4,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
+using OpenQA.Selenium.Remote;
 
 namespace HSDeckCollector.Core
 {
@@ -54,7 +55,12 @@ namespace HSDeckCollector.Core
             }
             else if (webDriverType == typeof(FirefoxDriver))
             {
-                _driver = new FirefoxDriver();
+           /*     var driverService = FirefoxDriverService.CreateDefaultService();
+                driverService.FirefoxBinaryPath = @"C:\Program Files (x86)\Mozilla Firefox\firefox.exe";
+                driverService.HideCommandPromptWindow = true;
+                driverService.SuppressInitialDiagnosticInformation = true;
+*/
+                _driver = new FirefoxDriver(new FirefoxOptions());
                 _driver.Manage().Window.Maximize();
             }
             else

@@ -13,6 +13,7 @@
         OnOpponentPlayToDeck,
         OnOpponentPlayToHand,
         OnGameEnd,
-        OnPlayerDraw
+        OnPlayerDraw,
+        OnOpponentHeroPower
     }
 }

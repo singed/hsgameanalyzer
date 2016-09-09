@@ -126,11 +126,12 @@
                             <h3 class="panel-title">Possible Decks</h3>
                         </div>
                         <div class="panel-body">
-                            <ul class="list-group">
-                                <li class="list-group-item hs-list-item" data-toggle="collapse" style="cursor: pointer;" data-target="#deck{{$index}}" ng-repeat="deck in decks | orderBy:'-percentage'">
+                            <ul class="list-group" id="decksList">
+                                <li class="list-group-item hs-list-item"   ng-repeat="deck in decks | orderBy:'-percentage'">
                                     <div class="row deck-row">
-                                        <div class="col-xs-2 percentage">{{deck.percentage}}</div>
-                                        <div class="col-xs-8 name hide-overflow">{{deck.name}}</div>
+                                        <div class="col-xs-1 "><input type="checkbox" ng-model="deck.isChecked" ng-change="changeDeck(deck.link)"/></div>
+                                        <div class="col-xs-1 percentage">{{deck.percentage}}</div>
+                                        <div class="col-xs-8 name hide-overflow" data-toggle="collapse" style="cursor: pointer;"  data-target="#deck{{$index}}">{{deck.name}}</div>
                                         <div class="col-xs-2 type">{{deck.type}}</div>
                                     </div>
                                     <div id="deck{{$index}}" class="collapse">

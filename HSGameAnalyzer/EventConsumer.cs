@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using HSCore;
 using HSCore.Entities;
 using Microsoft.AspNet.SignalR;
@@ -28,7 +29,7 @@ namespace HSGameAnalyzer
         private IModel _model;
         private IBasicProperties _properties;
 
-        private readonly MongoRepository<HSCard> _cardRepository;
+        private readonly MongoRepository<HSGame> _gameRepository;
         public EventConsumer()
         {
             MessageHandler handler = new MessageHandler();
@@ -45,10 +46,10 @@ namespace HSGameAnalyzer
             _model.QueueBind(QueueName, ExchangeName, "");
             _model.BasicQos(0, 1, false);
             _subscription = new Subscription(_model, QueueName, false);
-         
+
             /*var consumer = new ConsumeDelegate(Poll);
             consumer.Invoke();*/
-
+            _gameRepository = new MongoRepository<HSGame>();
 
 
         }
@@ -79,16 +80,14 @@ namespace HSGameAnalyzer
             {
                 case HSGameEventTypes.OnGameStart:
                     string gameId = message.Data.ToString();
-                    var game = new HSGame()
+                    var game = new HSGameDto()
                     {
                         EventType = message.EventType,
                         GameId = gameId,
-                        OpponentDeckCount = 30,
-                        OpponentHandCount = 3,
-                        TurnNumber = 0
                     };
                     message.Data = game;
                     hubContext.Clients.All.sendMessage(message);
+                    _gameRepository.Add(Mapper.Map<HSGame>(game));
                     break;
                 case HSGameEventTypes.OnTurnStart:
                     hubContext.Clients.All.sendMessage(message);

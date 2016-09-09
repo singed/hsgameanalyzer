@@ -38,5 +38,12 @@ namespace HSGameAnalyzer
             return decksDto;
             //Clients.All.applyDecks(decks);
         }
+
+        public void SaveTurn(HSTurnDto turnDto)
+        {
+            var turn = Mapper.Map<HSTurn>(turnDto);
+            MongoRepository<HSTurn> turnRepository = new MongoRepository<HSTurn>();
+            turnRepository.Add(turn);
+        }
     }
 }

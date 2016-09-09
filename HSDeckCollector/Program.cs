@@ -21,10 +21,11 @@ namespace HSDeckCollector
     {
         static void Main(string[] args)
         {
-          /*  var _cardRepository = new MongoRepository<HSCard>();
+            /*  var _cardRepository = new MongoRepository<HSCard>();
 
-            var cards = new Dictionary<string, int> { { "Onyxia", 1 } }.Select(x=>x.Key).ToList();
-            var listofCards = _cardRepository.Where(x => cards.Contains(x.name)).ToList();*/
+              var cards = new Dictionary<string, int> { { "Onyxia", 1 } }.Select(x=>x.Key).ToList();
+              var listofCards = _cardRepository.Where(x => cards.Contains(x.name)).ToList();*/
+            //FirefoxDriver
             Browser browser = new Browser(typeof(FirefoxDriver));
             NavigationManager navigationManager = new NavigationManager(browser, "");
             ActionManager actionManager = new ActionManager(browser);
@@ -32,8 +33,8 @@ namespace HSDeckCollector
             HearthpwnCollector hearthpwnCollector = new HearthpwnCollector(navigationManager, actionManager);
             hearthpwnCollector.Collect();
 
-            /*HsTopDecksCollector hsTopDecksCollector = new HsTopDecksCollector(navigationManager, actionManager);
-            hsTopDecksCollector.Collect();*/
+            HsTopDecksCollector hsTopDecksCollector = new HsTopDecksCollector(navigationManager, actionManager);
+            hsTopDecksCollector.Collect();
 
             Console.ReadKey();
         }

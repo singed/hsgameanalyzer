@@ -3,17 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MongoRepository;
 
 namespace HSCore.Entities
 {
-    public class HSTurn
+    [CollectionName("Turns")]
+    public class HSTurn: Entity
     {
-        protected HSGameEventTypes EventType { get; set; }
-        public bool Data { get; set; }
-        private string _description;
-        protected string Description {
-            get { return Data ? "opponent's turn" : "my turn"; }
-            set { _description = value; }
-        }
+        public string CardId{ get; set; }
+        public int TurnNumber { get; set; }
+        public string GameId { get; set; }
+    }
+
+    public class HSTurnDto 
+    {
+        public string CardId { get; set; }
+        public int TurnNumber { get; set; }
+        public string GameId { get; set; }
     }
 }

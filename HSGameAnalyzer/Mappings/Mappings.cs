@@ -13,6 +13,12 @@ namespace HSGameAnalyzer.Mappings
 
             CreateMap<HSDeck, HSDeckDto>();
             CreateMap<HSDeckDto, HSDeck>();
+
+            CreateMap<HSTurn, HSTurnDto>();
+            CreateMap<HSTurnDto, HSTurn>();
+
+            CreateMap<HSGame, HSGameDto>();
+            CreateMap<HSGameDto, HSGame>();
         }
     }
 }

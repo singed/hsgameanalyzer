@@ -1,16 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using MongoRepository;
 
 namespace HSCore.Entities
 {
-    public class HSGame
+    [CollectionName("Games")]
+    public class HSGame : Entity
     {
         public string GameId { get; set; }
         public HSGameEventTypes EventType { get; set; }
-        public int TurnNumber { get; set; }
-        public int OpponentHandCount { get; set; }
-        public int OpponentDeckCount { get; set; }
-        public HSCard PlayedCard { get; set; }
-        public List<HSCard> OpponentPlayedCards { get; set; }
+        public string OpponentClass { get; set; }
+        public string ProbableOpponentDeckId { get; set; }
+        //public IEnumerable<HSTurn> Turns { get; set; }
+    }
+
+    public class HSGameDto
+    {
+        public string GameId { get; set; }
+        public HSGameEventTypes EventType { get; set; }
+        public string OpponentClass { get; set; }
+        public string ProbableOpponentDeckId { get; set; }
+        //public IEnumerable<HSTurn> Turns { get; set; }
     }
 }

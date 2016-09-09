@@ -46,6 +46,7 @@
                 onPlayerDraw: 12,
             };
 
+            var gameId;
             $scope.data = [];
             $scope.playerHand = [];
             $scope.opponentHand = [];
@@ -117,11 +118,21 @@
                     _.each($scope.decks, function(item) {
                         var matchedCard = _.find(item.cards, { cardId: playedCard.id });
                         if (!!matchedCard) {
-                            item.percentage += 3.33;
+                            item.percentage += 3;
                         }
                     });
+                    var turnData = {
+                        gameId: gameId,
+                        turnNumber: $scope.turnNumber,
+                        cardId: playedCard.id
+                    }
+                    proxy.invoke('saveTurn', turnData).done(function () {
+                        console.log('card sent');
+                    });
 
-
+                }
+                else if (message.eventType === gameEvents.onGameStart) {
+                    gameId = message.data.gameId;
                 } else {
                     console.log('event type untracked ' + message.eventType);
                 }
@@ -145,6 +156,7 @@
                 proxy.invoke('getDecks', className).done(function (decks) {
                     $scope.decks = _.map(decks, function (item) {
                         item.percentage = 0;
+                        item.isCheccked = false;
                         _.each(item.cards, function (card) {
                             card.timesPlayed = 0;
                             card.image = "<img src='http://wow.zamimg.com/images/hearthstone/cards/enus/medium/" + card.cardId + ".png' />"
@@ -171,6 +183,23 @@
                 $scope.loaded = true;;
                 $scope.$apply();
             });
+
+            $scope.changeDeck = function (deckLink) {
+                var decks = _.filter($scope.decks, function(d) {
+                    return d.isChecked;
+                });
+                var possibleCardsOnThisTurn = [];
+                _.each(decks, function(item) {
+                    var matchedCards = _.filter(item.cards, function(card) {
+                        if (card.cost <= $scope.turnNumber) {
+                            return card;
+                        }
+                    });
+                    possibleCardsOnThisTurn = _.concat(possibleCardsOnThisTurn, matchedCards);
+                });
+               
+                $scope.possibleCardsToPlay = _.uniqBy(possibleCardsOnThisTurn, 'cardId');
+            }
 
             function Coin() {
                 return { id: '0', name: "Coin", cost: "0" };

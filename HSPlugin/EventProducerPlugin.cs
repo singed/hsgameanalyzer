@@ -59,7 +59,15 @@ namespace HSPlugin
             GameEvents.OnOpponentGet.Add(OnOpponentGet);
             GameEvents.OnGameStart.Add(OnGameStart);
             GameEvents.OnGameEnd.Add(OnGameEnd);
+            GameEvents.OnOpponentHeroPower.Add(OnOpponentHeroPower);
 
+        }
+
+        private void OnOpponentHeroPower()
+        {
+            var message = new HsGameMessage(HSGameEventTypes.OnOpponentHeroPower);
+            message.Data = null;
+            PublishMessage(message);
         }
 
         private void OnPlayerDraw(Card card)
