@@ -21,7 +21,8 @@
                     animated: 'fade',
                     placement: 'bottom',
                     html: true,
-                    content: "<img src='http://wow.zamimg.com/images/hearthstone/cards/enus/medium/CS2_045.png' />"
+                    content: "<img src='http://wow.zamimg.com/images/hearthstone/cards/enus/medium/CS2_045.png' />",
+                   
                 });
             }
         };
@@ -148,7 +149,7 @@
                 $('li[data-toggle="tooltip"]').tooltip({
                     animated: 'fade',
                     placement: 'bottom',
-                    html: true
+                    html: true,
                 });
             }
 
@@ -159,8 +160,8 @@
                         item.isCheccked = false;
                         _.each(item.cards, function (card) {
                             card.timesPlayed = 0;
-                            card.image = "<img src='http://wow.zamimg.com/images/hearthstone/cards/enus/medium/" + card.cardId + ".png' />";
-                            card.imageUrl = "http://wow.zamimg.com/images/hearthstone/cards/enus/medium/" + card.cardId + ".png";
+                            card.image = "<img style='margin-bottom:50pxl' src='http://wow.zamimg.com/images/hearthstone/cards/enus/medium/" + card.cardId + ".png' />";
+                            card.imageUrl = "/src/images/" + card.cardId + ".png";
                         });
                         return item;
                     });
@@ -168,7 +169,7 @@
                     $('li[data-toggle="tooltip"]').tooltip({
                         animated: 'fade',
                         placement: 'bottom',
-                        html: true
+                        html: true,
                     });
                 }).fail(function (err) {
                     console.log(err);
