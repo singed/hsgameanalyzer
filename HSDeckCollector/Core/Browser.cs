@@ -55,11 +55,6 @@ namespace HSDeckCollector.Core
             }
             else if (webDriverType == typeof(FirefoxDriver))
             {
-           /*     var driverService = FirefoxDriverService.CreateDefaultService();
-                driverService.FirefoxBinaryPath = @"C:\Program Files (x86)\Mozilla Firefox\firefox.exe";
-                driverService.HideCommandPromptWindow = true;
-                driverService.SuppressInitialDiagnosticInformation = true;
-*/
                 _driver = new FirefoxDriver(new FirefoxOptions());
                 _driver.Manage().Window.Maximize();
             }

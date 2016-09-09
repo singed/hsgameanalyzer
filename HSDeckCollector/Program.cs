@@ -26,15 +26,15 @@ namespace HSDeckCollector
               var cards = new Dictionary<string, int> { { "Onyxia", 1 } }.Select(x=>x.Key).ToList();
               var listofCards = _cardRepository.Where(x => cards.Contains(x.name)).ToList();*/
             //FirefoxDriver
-            Browser browser = new Browser(typeof(FirefoxDriver));
+            Browser browser = new Browser(typeof(ChromeDriver));
             NavigationManager navigationManager = new NavigationManager(browser, "");
             ActionManager actionManager = new ActionManager(browser);
 
             HearthpwnCollector hearthpwnCollector = new HearthpwnCollector(navigationManager, actionManager);
             hearthpwnCollector.Collect();
 
-            HsTopDecksCollector hsTopDecksCollector = new HsTopDecksCollector(navigationManager, actionManager);
-            hsTopDecksCollector.Collect();
+          /*  HsTopDecksCollector hsTopDecksCollector = new HsTopDecksCollector(navigationManager, actionManager);
+            hsTopDecksCollector.Collect();*/
 
             Console.ReadKey();
         }

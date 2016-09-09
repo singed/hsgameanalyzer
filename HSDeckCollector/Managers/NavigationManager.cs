@@ -34,7 +34,14 @@ namespace HSDeckCollector.Managers
             WaitExtensions.Wait(() => Driver.Url.Contains(BaseUrl + pageToNavigate), TimeSpan.FromSeconds(3), "URL isn't reached");
         }
 
-        public string CurrentUrl => Driver.Url;
+        public string CurrentUrl
+        {
+            get
+            {
+                return  Driver.Url;
+            }
+        }
+    
 
         /// <summary>
         /// Goes to custom page.

@@ -31,7 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="HearthDb">
-      <HintPath>E:\Projects\HSGameAnalyzer\_shared\HearthDb.dll</HintPath>
+      <HintPath>..\_shared\HearthDb.dll</HintPath>
     </Reference>
     <Reference Include="HearthstoneDeckTracker, Version=0.15.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

@@ -96,6 +96,7 @@ namespace HSDeckCollector.Collectors
                 catch (Exception ex)
                 {
                     Console.WriteLine("!!!! " + ex.Message);
+                    Console.WriteLine("trying  again " + errorsCount);
                     errorsCount++;
                     if (errorsCount == 3)
                         continue;
