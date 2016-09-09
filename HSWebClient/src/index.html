@@ -16,6 +16,17 @@
 
 
     <style type="text/css">
+        .some {
+            background: url('http://wow.zamimg.com/images/hearthstone/cards/enus/original/GVG_077.png') center 33%;
+            width: 250px;
+            height: 30px;
+            text-align: left;
+            padding-left: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+        }
+
         div.card-row .cost, div.deck-row .percentage {
             background: #286eb2;
             color: #fff;
@@ -39,6 +50,23 @@
             padding-bottom: 0px;
             cursor: pointer;
         }
+        /*
+            .hs-list-item .name {
+                float: left;
+                background-color: black;
+                line-height: 24px;
+                width: calc(100% - 8px - 22px);
+                color: #ffffff;
+                padding-left: 6px;
+                padding-right: 6px;
+                background-position: right center;
+                background-repeat: no-repeat;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                font-weight: 600;
+                text-shadow: 0px 1px 3px;
+            }*/
 
         .hide-card {
             opacity: 0.3;
@@ -109,10 +137,11 @@
                         </div>
                         <div class="panel-body">
                             <ul class="list-group">
+                                <li clas
                                 <li class="list-group-item hs-list-item" ng-repeat="card in opponentCardsPlayed | reverse " data-toggle="tooltip" title="{{card.image}}">
                                     <div class="row card-row">
                                         <div class="col-xs-1 cost">{{card.cost}}</div>
-                                        <div class="col-xs-10 name">{{card.name}}</div>
+                                        <div class="col-xs-10 name" ">{{card.name}}</div>
                                         <div class="col-xs-1 count">{{card.count}}</div>
                                     </div>
                                 </li>
@@ -127,19 +156,19 @@
                         </div>
                         <div class="panel-body">
                             <ul class="list-group" id="decksList">
-                                <li class="list-group-item hs-list-item"   ng-repeat="deck in decks | orderBy:'-percentage'">
+                                <li class="list-group-item hs-list-item" ng-repeat="deck in decks | orderBy:'-percentage'">
                                     <div class="row deck-row">
-                                        <div class="col-xs-1 "><input type="checkbox" ng-model="deck.isChecked" ng-change="changeDeck(deck.link)"/></div>
+                                        <div class="col-xs-1 "><input type="checkbox" ng-model="deck.isChecked" ng-change="changeDeck(deck.link)" /></div>
                                         <div class="col-xs-1 percentage">{{deck.percentage}}</div>
-                                        <div class="col-xs-8 name hide-overflow" data-toggle="collapse" style="cursor: pointer;"  data-target="#deck{{$index}}">{{deck.name}}</div>
+                                        <div class="col-xs-8 name hide-overflow" data-toggle="collapse" style="cursor: pointer;" data-target="#deck{{$index}}">{{deck.name}}</div>
                                         <div class="col-xs-2 type">{{deck.type}}</div>
                                     </div>
                                     <div id="deck{{$index}}" class="collapse">
                                         <ul class="list-group">
-                                            <li class="list-group-item hs-list-item"  ng-class="cardDisplayClass(card)" ng-repeat="card in deck.cards | orderBy:'cost'" data-toggle="tooltip" title="{{card.image}}">
+                                            <li class="list-group-item hs-list-item" ng-class="cardDisplayClass(card)" ng-repeat="card in deck.cards | orderBy:'cost'" data-toggle="tooltip" title="{{card.image}}">
                                                 <div class="row card-row">
                                                     <div class="col-xs-1 cost">{{card.cost}}</div>
-                                                    <div class="col-xs-10 name">{{card.name}}</div>
+                                                    <div class="col-xs-10 name"><img ng-src="https://cdn-tempostorm.netdna-ssl.com/cards/bloodmage-thalanos.small.png" alt="card.card.name" src="https://cdn-tempostorm.netdna-ssl.com/cards/bloodmage-thalanos.small.png">{{card.name}}</div>
                                                     <div class="col-xs-1 count">{{card.count}}</div>
                                                 </div>
                                             </li>
@@ -151,12 +180,10 @@
                     </div>
                 </div>
             </div>
-            <!-- <ul ng-repeat="elm in data">
-                <li>{{elm}}</li>
-            </ul>-->
+            <div class="some">sdfsdf</div>
         </div>
 
     </div>
-    <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js">sdfs</script>
 </body>
 </html>

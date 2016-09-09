@@ -159,7 +159,8 @@
                         item.isCheccked = false;
                         _.each(item.cards, function (card) {
                             card.timesPlayed = 0;
-                            card.image = "<img src='http://wow.zamimg.com/images/hearthstone/cards/enus/medium/" + card.cardId + ".png' />"
+                            card.image = "<img src='http://wow.zamimg.com/images/hearthstone/cards/enus/medium/" + card.cardId + ".png' />";
+                            card.imageUrl = "http://wow.zamimg.com/images/hearthstone/cards/enus/medium/" + card.cardId + ".png";
                         });
                         return item;
                     });
@@ -180,7 +181,8 @@
                 return card.timesPlayed >= card.count ? 'hide-card' : 'blur-card';
             }
             $.connection.hub.start().done(function (err) {
-                $scope.loaded = true;;
+                $scope.loaded = true;
+                $scope.getDecks('Druid');
                 $scope.$apply();
             });
 
