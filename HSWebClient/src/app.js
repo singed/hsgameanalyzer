@@ -10,42 +10,14 @@
     });
 
 
-    angular.module('hsapp').directive('cardTooltip', function () {
-        return {
-            restrict: 'EA',
-            scope: {
-                title: '@'
-            },
-            link: function ($scope, element, attrs) {
-                $(element).tooltip({
-                    animated: 'fade',
-                    placement: 'bottom',
-                    html: true,
-                    content: "<img src='http://wow.zamimg.com/images/hearthstone/cards/enus/medium/CS2_045.png' />",
-                   
-                });
-            }
-        };
-    });
+   
 
 
     angular.module('hsapp')
-        .controller('MainController', ['$scope', function ($scope) {
+        .controller('MainController', ['$scope', 'constants', function ($scope, constants) {
             $scope.loaded = false;
-            var gameEvents = {
-                onGameStart: 1,
-                onTurnStart: 2,
-                onPlayerMulligan: 3,
-                onPlayerGet: 4,
-                onOpponentGet: 5,
-                onOpponentDraw: 6,
-                onOpponentPlay: 7,
-                onOpponentHandDiscard: 8,
-                onOpponentPlayToDeck: 9,
-                onOpponentPlayToHand: 10,
-                onGameEnd: 11,
-                onPlayerDraw: 12,
-            };
+            var gameEvents = constants.gameEvents;
+            $scope.classes = constants.classes;
 
             var gameId;
             $scope.data = [];

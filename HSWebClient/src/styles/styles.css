@@ -1,52 +1,62 @@
-﻿  .navbar-inverse {
-            background-color: #222222;
-        }
-         .card-image-tooltip + .tooltip > .tooltip-inner {
-             background-color: rgba(255,255,255, 0);
-             margin-top: -40px;
-             margin-left: 30px;
-         }
+﻿.navbar-inverse {
+    background-color: #222222;
+}
 
-        div.card-row .cost, div.deck-row .percentage {
-            background: #286eb2;
-            color: #fff;
-            text-align: center;
-        }
-         div.card-row .cost {
-             height: 28px;
-         }
-        .card-image {
-            float: right;
-            width: 130px;
-            opacity: 0.5;
-            height: 26px;
-        }
+.card-image-tooltip + .tooltip > .tooltip-inner {
+    background-color: rgba(255,255,255, 0);
+    margin-top: -40px;
+    margin-left: 30px;
+}
 
-        div.card-row .count, div.deck-row .type {
-            background: #2d2d2d;
-            color: #cbb800;
-            text-align: center;
-        }
-        div.deck-row .type {
-            color: #00bc8c;
-        }
+div.card-row .cost, div.deck-row .percentage {
+    background: #286eb2;
+    color: #fff;
+    text-align: center;
+}
 
-        .hide-overflow {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+div.card-row .cost {
+    height: 28px;
+}
 
-        .hs-list-item {
-            padding-top: 0px;
-            padding-bottom: 0px;
-            cursor: pointer;
-        }
+.card-image {
+    float: right;
+    width: 130px;
+    opacity: 0.5;
+    height: 26px;
+}
 
-        .hide-card {
-            opacity: 0.3;
-        }
+div.card-row .count, div.deck-row .type {
+    background: #2d2d2d;
+    color: #cbb800;
+    text-align: center;
+}
 
-        .blur-card {
-            opacity: 0.8;
-        }
+div.deck-row .type {
+    color: #00bc8c;
+}
+
+.hide-overflow {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.hs-list-item {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    cursor: pointer;
+}
+
+.hide-card {
+    opacity: 0.3;
+}
+
+.blur-card {
+    opacity: 0.8;
+}
+
+.classImage {
+    background-size: 60px 60px !important;
+    width: 60px;
+    margin-right: 30px !important;
+}
