@@ -9,15 +9,40 @@
         };
     });
 
-
-   
-
-
     angular.module('hsapp')
-        .controller('MainController', ['$scope', 'constants', function ($scope, constants) {
-            $scope.loaded = false;
+        .controller('MainController', ['$scope', 'constants', 'gameService', function ($scope, constants, gameService) {
+
+            // signalr init
+            $.connection.hub.url = 'http://localhost:8088/signalr/hubs';
+            var proxy = $.connection.hshub;
+
             var gameEvents = constants.gameEvents;
             $scope.classes = constants.classes;
+
+            gameService.init(proxy);
+            // 1. start(init) new game
+            $scope.loaded = false;
+          /*  angular.extend($scope, {
+                changeDeck: gameService.changeDeck,
+            });*/
+
+            $scope.getDecks = function (className) {
+                gameService.getDecks(className).then(applyDecks);
+            }
+
+            function applyDecks(decks) {
+                $scope.decks = decks;
+                $('li[data-toggle="tooltip"]').tooltip({
+                    animated: 'fade',
+                    placement: 'top',
+                    html: true,
+                });
+                $scope.$apply();
+            }
+
+            // end game
+
+         
 
             var gameId;
             $scope.data = [];
@@ -30,8 +55,7 @@
             var gameCounter = 0;
             $scope.playersTurn = false;
             $scope.decks = [];
-            $.connection.hub.url = 'http://localhost:8088/signalr/hubs';
-            var proxy = $.connection.hshub;
+         
             proxy.client.sendMessage = function (message) {
                 if (message.eventType === gameEvents.onPlayerDraw) {
                     $scope.playerHand.push(Card(message));
@@ -124,7 +148,7 @@
                     html: true,
                 });
             }
-
+/*
             $scope.getDecks = function (className) {
                 proxy.invoke('getDecks', className).done(function (decks) {
                     $scope.decks = _.map(decks, function (item) {
@@ -146,7 +170,7 @@
                 }).fail(function (err) {
                     console.log(err);
                 });
-            }
+            }*/
 
             $scope.cardDisplayClass = function (card) {
                 if (card.timesPlayed === 0)
@@ -155,11 +179,10 @@
             }
             $.connection.hub.start().done(function (err) {
                 $scope.loaded = true;
-                $scope.getDecks('Druid');
                 $scope.$apply();
             });
 
-            $scope.changeDeck = function (deckLink) {
+            /*$scope.changeDeck = function (deckLink) {
                 var decks = _.filter($scope.decks, function(d) {
                     return d.isChecked;
                 });
@@ -174,7 +197,7 @@
                 });
                
                 $scope.possibleCardsToPlay = _.uniqBy(possibleCardsOnThisTurn, 'cardId');
-            }
+            }*/
 
             function Coin() {
                 return { id: '0', name: "Coin", cost: "0" };
