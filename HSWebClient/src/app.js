@@ -10,9 +10,6 @@
     });
 
 
-   
-
-
     angular.module('hsapp')
         .controller('MainController', ['$scope', 'constants', function ($scope, constants) {
             $scope.loaded = false;
@@ -99,10 +96,10 @@
                         turnNumber: $scope.turnNumber,
                         cardId: playedCard.id
                     }
-                    proxy.invoke('saveTurn', turnData).done(function () {
+                   /* proxy.invoke('saveTurn', turnData).done(function () {
                         console.log('card sent');
                     });
-
+*/
                 }
                 else if (message.eventType === gameEvents.onGameStart) {
                     gameId = message.data.gameId;

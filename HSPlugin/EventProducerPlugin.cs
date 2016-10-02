@@ -38,9 +38,9 @@ namespace HSPlugin
             };
             _connection = _factory.CreateConnection();
             _model = _connection.CreateModel();
-            _model.ExchangeDeclare(ExchangeName, ExchangeType.Direct);
+            _model.ExchangeDeclare(ExchangeName, ExchangeType.Direct, true);
 
-            _model.QueueDeclare(QueueName, false, false, false, null);
+            _model.QueueDeclare(QueueName, true, false, false, null);
             _model.QueueBind(QueueName, ExchangeName, "");
             _properties = _model.CreateBasicProperties();
             _properties.Persistent = true;
@@ -60,7 +60,21 @@ namespace HSPlugin
             GameEvents.OnGameStart.Add(OnGameStart);
             GameEvents.OnGameEnd.Add(OnGameEnd);
             GameEvents.OnOpponentHeroPower.Add(OnOpponentHeroPower);
+            GameEvents.OnGameLost.Add(OnGameLost);
+            GameEvents.OnGameWon.Add(OnGameWon);
 
+        }
+
+        private void OnGameWon()
+        {
+            var message = new HsGameMessage(HSGameEventTypes.OnGameWon) { Data = _gameId };
+            PublishMessage(message);
+        }
+
+        private void OnGameLost()
+        {
+            var message = new HsGameMessage(HSGameEventTypes.OnGameLost) {Data = _gameId };
+            PublishMessage(message);
         }
 
         private void OnOpponentHeroPower()
@@ -106,12 +120,12 @@ namespace HSPlugin
             PublishMessage(message);
         }
 
-        private void OnGameEnd()
+     /*   private void OnGameEnd()
         {
             var message = new HsGameMessage(HSGameEventTypes.OnGameEnd);
             message.Data = _gameId;
             PublishMessage(message);
-        }
+        }*/
 
 
         private void OnOpponentHandDiscard(Card card)

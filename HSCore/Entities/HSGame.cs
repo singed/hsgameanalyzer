@@ -12,7 +12,7 @@ namespace HSCore.Entities
         public HSGameEventTypes EventType { get; set; }
         public string OpponentClass { get; set; }
         public string ProbableOpponentDeckId { get; set; }
-        //public IEnumerable<HSTurn> Turns { get; set; }
+        public bool IsWon { get; set; }
     }
 
     public class HSGameDto
@@ -21,6 +21,6 @@ namespace HSCore.Entities
         public HSGameEventTypes EventType { get; set; }
         public string OpponentClass { get; set; }
         public string ProbableOpponentDeckId { get; set; }
-        //public IEnumerable<HSTurn> Turns { get; set; }
+        public bool IsWon { get; set; }
     }
 }

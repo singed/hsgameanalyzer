@@ -45,5 +45,22 @@ namespace HSGameAnalyzer
             MongoRepository<HSTurn> turnRepository = new MongoRepository<HSTurn>();
             turnRepository.Add(turn);
         }
+
+        public void OnGameLost(HSGameDto gameDto)
+        {
+            OnGameEnd(gameDto);
+        }
+
+        public void OnGameWon(HSGameDto gameDto)
+        {
+            OnGameEnd(gameDto);
+        }
+
+        private void OnGameEnd(HSGameDto gameDto)
+        {
+            MongoRepository<HSGame> gameRepository = new MongoRepository<HSGame>();
+            var updatedGame = Mapper.Map<HSGame>(gameDto);
+            gameRepository.Update(updatedGame);
+        }
     }
 }
