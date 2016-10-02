@@ -24,7 +24,10 @@
             onOpponentPlayToDeck: 9,
             onOpponentPlayToHand: 10,
             onGameEnd: 11,
-            onPlayerDraw: 12
+            onPlayerDraw: 12,
+            onOpponentHeroPower:13,
+            onGameLost: 14,
+            onGameWon: 15
         };
     }
 

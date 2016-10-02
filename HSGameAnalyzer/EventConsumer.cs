@@ -82,7 +82,6 @@ namespace HSGameAnalyzer
                     string gameId = message.Data.ToString();
                     var game = new HSGameDto()
                     {
-                        EventType = message.EventType,
                         GameId = gameId,
                     };
                     message.Data = game;

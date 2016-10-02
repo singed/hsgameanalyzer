@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using MongoRepository;
 
 namespace HSCore.Entities
@@ -18,6 +19,7 @@ namespace HSCore.Entities
 
     public class HSDeckDto
     {
+        public string Id { get; set; }
         public string Name { get; set; }
         //  public string SiteName { get; set; }
         public string Link { get; set; }

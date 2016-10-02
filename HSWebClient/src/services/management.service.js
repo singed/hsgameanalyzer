@@ -33,6 +33,7 @@
         }
 
         function getDecks(className) {
+            this.game.opponentClass = className;
             return this.proxy.invoke('getDecks', className)
                 .done(manageDecks)
                 .fail(function (err) { console.log(err); });

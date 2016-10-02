@@ -16,11 +16,10 @@
 
         return service;
 
-        var playersTurn, gameStartFlag, gameCounter, playersFirstTurn, gameId;
+        var playersTurn, gameStartFlag, gameCounter, playersFirstTurn;
 
         function startNewGame() {
             gameModels.initNewGame();
-            gameId = null;
             gameStartFlag = true;
             gameCounter = 0;
             playersFirstTurn = false;
@@ -33,7 +32,6 @@
             }
             else if (message.eventType === constants.gameEvents.onTurnStart) {
                 console.log('===== turn event =====');
-                debugger;
                 playersTurn = !playersTurn;
                 if (this.game.playerHand.length > 0 && gameStartFlag) { // we have coin
                     playersFirstTurn = false;
@@ -79,7 +77,7 @@
                     }
                 });
                 var turnData = {
-                    gameId: gameId,
+                    gameId: service.game.id,
                     turnNumber: this.game.turnNumber,
                     cardId: playedCard.id
                 }
@@ -89,26 +87,38 @@
 
             }
             else if (message.eventType === constants.gameEvents.onGameStart) {
-                gameId = message.data.gameId;
                 this.startNewGame();
-                // save game 
+                this.game.id = message.data.gameId;
+            }
+            else if (message.eventType === constants.gameEvents.onGameLost || message.eventType === constants.gameEvents.onGameWon) {
+                debugger;
+                var deck = _.last(_.orderBy(this.game.decks, ['percentage']));
+                var won = message.eventType === constants.gameEvents.onGameWon ? true : false;
+                var game = {
+                    gameId: service.game.id,
+                    opponentClass: service.game.opponentClass,
+                    probableDeckId: deck.id,
+                    probableDeckType: deck.type,
+                    won: won
+                };
+
+                this.proxy.invoke('endGame', game).done(function () {
+                    console.log('game saved');
+                });
             } else {
                 console.log('event type untracked ' + message.eventType);
             }
-/*
-            $('li[data-toggle="tooltip"]').tooltip({
-                animated: 'fade',
-                placement: 'bottom',
-                html: true
-            });*/
 
         }
         function recalcPossiblePlays() {
             // re-calculate possible cards to play
+            var decks = _.filter(this.game.decks, function (d) {
+                return d.isChecked;
+            });
             var possibleCardsOnThisTurn = [];
-            _.each(this.game.decks, function (item) {
+            _.each(decks, function (item) {
                 var matchedCards = _.filter(item.cards, function (card) {
-                    if (card.cost <= service.game.turnNumber) {
+                    if (card.cost === service.game.turnNumber) {
                         return card;
                     }
                 });
