@@ -42,7 +42,7 @@ namespace HSGameAnalyzer
             };
             _connection = _factory.CreateConnection();
             _model = _connection.CreateModel();
-            _model.QueueDeclare(QueueName, false, false, false, null);
+            _model.QueueDeclare(QueueName, true, false, false, null);
             _model.QueueBind(QueueName, ExchangeName, "");
             _model.BasicQos(0, 1, false);
             _subscription = new Subscription(_model, QueueName, false);
@@ -107,12 +107,12 @@ namespace HSGameAnalyzer
                 case HSGameEventTypes.OnPlayerDraw:
                     hubContext.Clients.All.sendMessage(message);
                     break;
-                    /* case HSGameEventTypes.OnOpponentHandDiscard:
-                         hubContext.Clients.All.sendMessage(message);
-                         break;
-                     case HSGameEventTypes.OnGameEnd:
-                         hubContext.Clients.All.sendMessage(message);
-                         break;*/
+                case HSGameEventTypes.OnGameLost:
+                    hubContext.Clients.All.sendMessage(message);
+                    break;
+                case HSGameEventTypes.OnGameWon:
+                    hubContext.Clients.All.sendMessage(message);
+                    break;
             }
         }
     }

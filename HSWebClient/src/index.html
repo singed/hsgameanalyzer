@@ -14,7 +14,8 @@
     <script src="/src/app.js"></script>
     <script src="/src/configuration/constants.js"></script>
     <script src="/src/directives.js"></script>
-    <script src="/src/services/gameModel.js"></script>
+    <script src="/src/services/gameModels.js"></script>
+    <script src="/src/services/management.service.js"></script>
     <script src="/src/services/game.service.js"></script>
     <script src="http://localhost:8088/signalr/hubs"></script>
 
@@ -34,7 +35,7 @@
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <div ng-show="loaded">
-                        <a class="navbar-brand" >Pick your opponent:&nbsp;&nbsp;&nbsp;</a>
+                        <a class="navbar-brand">Pick your opponent:&nbsp;&nbsp;&nbsp;</a>
                         <a class="navbar-brand classImage" style="background: url(/src/images/classes/{{class}}.png);" ng-repeat="class in classes" ng-click="getDecks(class)" href="#"></a>
                      
                     </div>
@@ -47,15 +48,20 @@
             </div>
             <div class="row">
                 <div class="col-lg-4">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
+                    <div class="panel panel-primary" >
+                        <div class="panel-heading" style="background-color: #4b0082;">
                             <ul class="nav nav-pills">
-                                <li>Turn number <span class="badge">{{turnNumber}}</span></li>
+                                <li style="margin-top: 5px;">Turn number <span class="badge" style="margin-right: 15px;">{{game.turnNumber}}</span></li>
+                                <li style="margin-top: 5px; margin-right: 5px;">Mana cost:</li>
+                                <li ng-repeat="num in [] | range:10" ng-click="filterByCost(num)">
+                                    <span class="mana-icon"><img src="/src/images/mana.png" class="mana-icon-img"></span><span class="mana-icon-cost">{{num}}</span>
+                                </li>
+                                <li><span class="mana-icon" ><img src="/src/images/mana.png" class="mana-icon-img"></span><span class="mana-icon-cost" style="left: 5px;">10</span></li>
                             </ul>
                         </div>
                         <div class="panel-body">
                             <ul class="list-group">
-                                <li class="list-group-item hs-list-item" ng-repeat="card in possibleCardsToPlay | orderBy:'-cost'" data-toggle="tooltip" title="{{card.image}}">
+                                <li class="list-group-item hs-list-item" ng-repeat="card in game.possibleCardsToPlay | orderBy:'-cost'" data-toggle="tooltip" title="{{card.image}}">
                                     <div class="row card-row">
                                         <div class="col-xs-1 cost">{{card.cost}}</div>
                                         <div class="col-xs-10 name">{{card.name}}</div>
@@ -74,7 +80,7 @@
                         <div class="panel-body">
                             <ul class="list-group">
 
-                                <li class="list-group-item hs-list-item" ng-repeat="card in opponentCardsPlayed | reverse " data-toggle="tooltip" title="{{card.image}}">
+                                <li class="list-group-item hs-list-item" ng-repeat="card in game.opponentCardsPlayed | reverse " data-toggle="tooltip" title="{{card.image}}">
                                     <div class="row card-row">
                                         <div class="col-xs-1 cost">{{card.cost}}</div>
                                         <div class="col-xs-10 name">{{card.name}}</div>
@@ -92,7 +98,7 @@
                         </div>
                         <div class="panel-body">
                             <ul class="list-group" id="decksList">
-                                <li class="list-group-item hs-list-item" ng-repeat="deck in decks | orderBy:'-percentage'">
+                                <li class="list-group-item hs-list-item" ng-repeat="deck in game.decks | orderBy:'-percentage'">
                                     <div class="row deck-row">
                                         <div class="col-xs-1 ">
                                             <input type="checkbox" ng-model="deck.isChecked" ng-change="changeDeck(deck.link)" />

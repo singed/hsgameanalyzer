@@ -9,223 +9,226 @@
         };
     });
 
+    angular.module('hsapp').filter('range', function () {
+        return function (input, total) {
+            total = parseInt(total);
+
+            for (var i = 1; i < total; i++) {
+                input.push(i);
+            }
+
+            return input;
+        };
+    });
+
     angular.module('hsapp')
-        .controller('MainController', ['$scope', 'constants', 'gameService', function ($scope, constants, gameService) {
+        .controller('MainController', ['$scope', 'constants', 'managementService', 'gameService', function ($scope, constants, managementService, gameService) {
 
             // signalr init
             $.connection.hub.url = 'http://localhost:8088/signalr/hubs';
             var proxy = $.connection.hshub;
-
-            var gameEvents = constants.gameEvents;
             $scope.classes = constants.classes;
 
-            gameService.init(proxy);
-            // 1. start(init) new game
-            $scope.loaded = false;
-          /*  angular.extend($scope, {
-                changeDeck: gameService.changeDeck,
-            });*/
+            
+            managementService.proxy = proxy;
+            gameService.proxy = proxy;
 
+
+            // 1. start(init) new game
+            managementService.game = gameService.game;
+            $scope.game = gameService.game;
+            gameService.startNewGame();
+
+            $scope.loaded = false;
             $scope.getDecks = function (className) {
-                gameService.getDecks(className).then(applyDecks);
+                managementService.getDecks(className).then(applyDecks);
+            }
+
+            $scope.filterByCost = function (number) {
+                managementService.filterByCost(number);
+            }
+
+            $scope.changeDeck = function (deckLink) {
+                managementService.changeDeck(deckLink);
             }
 
             function applyDecks(decks) {
-                $scope.decks = decks;
+                gameService.game.decks = decks;
+                $scope.$apply();
                 $('li[data-toggle="tooltip"]').tooltip({
                     animated: 'fade',
                     placement: 'top',
                     html: true,
                 });
-                $scope.$apply();
             }
 
             // end game
 
-         
-
-            var gameId;
-            $scope.data = [];
-            $scope.playerHand = [];
-            $scope.opponentHand = [];
-            $scope.opponentCardsPlayed = [];
-            $scope.possibleCardsToPlay = [];
-            $scope.turnNumber = 1;
-            var gameStartFlag = true;
-            var gameCounter = 0;
-            $scope.playersTurn = false;
-            $scope.decks = [];
-         
             proxy.client.sendMessage = function (message) {
-                if (message.eventType === gameEvents.onPlayerDraw) {
-                    $scope.playerHand.push(Card(message));
-                    console.log('Player draws.');
-                }
-                else if (message.eventType === gameEvents.onOpponentDraw) {
-                    $scope.opponentHand.push({});
-                    if ($scope.opponentHand.length === 4) $scope.playersTurn = true;
-                    console.log('Opponent draws.');
-                }
-                else if (message.eventType === gameEvents.onPlayerGet) {
-                    $scope.playerHand.push(Coin(message));
-                }
-                else if (message.eventType === gameEvents.onOpponentGet) {
-                    $scope.opponentHand.push({});
-                }
-                else if (message.eventType === gameEvents.onTurnStart) {
-                    $scope.playersTurn = !$scope.playersTurn;
-                    gameCounter++;
-                    console.log('players hand - ' + $scope.playerHand.length);
-                    console.log('opponent hand - ' + $scope.opponentHand.length);
-                    if ($scope.playerHand.length > $scope.opponentHand.length) {
-                        console.log('players turn');
-                        $scope.playersTurn = true;
-                    } else {
-                        console.log('opponents turn');
-                    }
-
-                    $scope.turnNumber = gameCounter % 2 === 0 ? $scope.turnNumber : ++$scope.turnNumber;
-                    console.log('turn number ' + $scope.turnNumber);
-                    if ($scope.playersTurn) // opponent has the coin, we go first
-                    {
-                        playersTurn();
-                    } else {
-                        console.log('opponents turn;');
-                    }
-                }
-                else if (message.eventType === gameEvents.onOpponentPlay) {
-                    var playedCard = {
-                        id: message.data.Id,
-                        name: message.data.Name,
-                        cost: message.data.Cost,
-                        count: 1,
-                        image: "<img src='http://wow.zamimg.com/images/hearthstone/cards/enus/medium/" + message.data.Id + ".png' />"
-                    };
-
-                    // check is card already played, push it to the played cards
-                    var index = _.indexOf($scope.opponentCardsPlayed, _.find($scope.opponentCardsPlayed, { id: playedCard.id }));
-                    if (index >= 0) {
-                        $scope.opponentCardsPlayed[index].count = Number($scope.opponentCardsPlayed[index].count) + 1;
-                    } else {
-                        $scope.opponentCardsPlayed.push(playedCard);
-                    }
-
-                    // re-calculate deck overlap
-
-                    _.each($scope.decks, function(item) {
-                        var matchedCard = _.find(item.cards, { cardId: playedCard.id });
-                        if (!!matchedCard) {
-                            item.percentage += 3;
-                        }
-                    });
-                    var turnData = {
-                        gameId: gameId,
-                        turnNumber: $scope.turnNumber,
-                        cardId: playedCard.id
-                    }
-                    proxy.invoke('saveTurn', turnData).done(function () {
-                        console.log('card sent');
-                    });
-
-                }
-                else if (message.eventType === gameEvents.onGameStart) {
-                    gameId = message.data.gameId;
-                } else {
-                    console.log('event type untracked ' + message.eventType);
-                }
-
-
-                if ($scope.playersTurn && gameStartFlag) {
-                    gameStartFlag = false;
-                    gameCounter++;
-                    playersTurn();
-                }
-
+                gameService.handleEvent(message);
                 $scope.$apply();
-                $('li[data-toggle="tooltip"]').tooltip({
-                    animated: 'fade',
-                    placement: 'bottom',
-                    html: true,
-                });
             }
-/*
-            $scope.getDecks = function (className) {
-                proxy.invoke('getDecks', className).done(function (decks) {
-                    $scope.decks = _.map(decks, function (item) {
-                        item.percentage = 0;
-                        item.isCheccked = false;
-                        _.each(item.cards, function (card) {
-                            card.timesPlayed = 0;
-                            card.image = "<img style='margin-bottom:50pxl' src='http://wow.zamimg.com/images/hearthstone/cards/enus/medium/" + card.cardId + ".png' />";
-                            card.imageUrl = "/src/images/cards/" + card.cardId + ".png";
-                        });
-                        return item;
-                    });
-                    $scope.$apply();
-                    $('li[data-toggle="tooltip"]').tooltip({
-                        animated: 'fade',
-                        placement: 'top',
-                        html: true,
-                    });
-                }).fail(function (err) {
-                    console.log(err);
-                });
-            }*/
+
+
+            $.connection.hub.start().done(function (err) {
+                $scope.loaded = true;
+                $scope.$apply();
+            });
 
             $scope.cardDisplayClass = function (card) {
                 if (card.timesPlayed === 0)
                     return "";
                 return card.timesPlayed >= card.count ? 'hide-card' : 'blur-card';
             }
-            $.connection.hub.start().done(function (err) {
-                $scope.loaded = true;
-                $scope.$apply();
-            });
-
-            /*$scope.changeDeck = function (deckLink) {
-                var decks = _.filter($scope.decks, function(d) {
-                    return d.isChecked;
-                });
-                var possibleCardsOnThisTurn = [];
-                _.each(decks, function(item) {
-                    var matchedCards = _.filter(item.cards, function(card) {
-                        if (card.cost <= $scope.turnNumber) {
-                            return card;
+            /*
+            
+                        var gameId;
+                        $scope.playerHand = [];
+                        $scope.opponentHand = [];
+                        $scope.opponentCardsPlayed = [];
+                        $scope.possibleCardsToPlay = [];
+                        $scope.turnNumber = 1;
+                        var gameStartFlag = true;
+                        var gameCounter = 0;
+                        var playersFirstTurn = false;
+                        var playersTurn = false;
+                        $scope.decks = [];
+            
+            
+                        proxy.client.sendMessage = function (message) {
+                            if (message.eventType === gameEvents.onPlayerDraw) {
+                                $scope.playerHand.push(Card(message));
+                            }
+                            else if (message.eventType === gameEvents.onPlayerGet) {
+                                $scope.playerHand.push(Coin(message));
+                            }
+                            else if (message.eventType === gameEvents.onTurnStart) {
+                                console.log('===== turn event =====');
+                                playersTurn = !playersTurn;
+                                if ($scope.playerHand.length > 0 && gameStartFlag) { // we have coin
+                                    playersFirstTurn = false;
+                                    $scope.playerHand.push(Coin(message));
+                                    gameStartFlag = false;
+            
+                                } else if (gameStartFlag) { 
+                                    playersFirstTurn = true;
+                                    $scope.opponentHand.push(Coin(message));
+                                    gameStartFlag = false;
+                                }
+            
+                                gameCounter++;
+            
+                                $scope.turnNumber = gameCounter > 1 ? gameCounter % 2 === 0 ? $scope.turnNumber : ++$scope.turnNumber : 1;
+                                console.log('turn number ' + $scope.turnNumber);
+                                if (playersTurn)
+                                {
+                                    recalcPossiblePlays();
+                                }
+                            }
+                            else if (message.eventType === gameEvents.onOpponentPlay) {
+                                var playedCard = {
+                                    id: message.data.Id,
+                                    name: message.data.Name,
+                                    cost: message.data.Cost,
+                                    count: 1,
+                                    image: "<img src='http://wow.zamimg.com/images/hearthstone/cards/enus/medium/" + message.data.Id + ".png' />"
+                                };
+            
+                                // check is card already played, push it to the played cards
+                                var index = _.indexOf($scope.opponentCardsPlayed, _.find($scope.opponentCardsPlayed, { id: playedCard.id }));
+                                if (index >= 0) {
+                                    $scope.opponentCardsPlayed[index].count = Number($scope.opponentCardsPlayed[index].count) + 1;
+                                } else {
+                                    $scope.opponentCardsPlayed.push(playedCard);
+                                }
+            
+                                // re-calculate deck overlap
+            
+                                _.each($scope.decks, function (item) {
+                                    var matchedCard = _.find(item.cards, { cardId: playedCard.id });
+                                    if (!!matchedCard) {
+                                        item.percentage += 3;
+                                    }
+                                });
+                                var turnData = {
+                                    gameId: gameId,
+                                    turnNumber: $scope.turnNumber,
+                                    cardId: playedCard.id
+                                }
+                                proxy.invoke('saveTurn', turnData).done(function () {
+                                    console.log('card sent');
+                                });
+            
+                            }
+                            else if (message.eventType === gameEvents.onGameStart) {
+                                gameId = message.data.gameId;
+            
+                                $scope.playerHand = [];
+                                $scope.opponentHand = [];
+                                $scope.opponentCardsPlayed = [];
+                                $scope.possibleCardsToPlay = [];
+                                $scope.turnNumber = 1;
+                                gameStartFlag = true;
+                                
+                                gameCounter = 0;
+                                playersTurn=false;
+                                playersFirstTurn = false;
+                                $scope.decks = [];
+                                // save game 
+                            } else {
+                                console.log('event type untracked ' + message.eventType);
+                            }
+            
+                            $scope.$apply();
+                            $('li[data-toggle="tooltip"]').tooltip({
+                                animated: 'fade',
+                                placement: 'bottom',
+                                html: true,
+                            });
                         }
-                    });
-                    possibleCardsOnThisTurn = _.concat(possibleCardsOnThisTurn, matchedCards);
-                });
-               
-                $scope.possibleCardsToPlay = _.uniqBy(possibleCardsOnThisTurn, 'cardId');
-            }*/
-
-            function Coin() {
-                return { id: '0', name: "Coin", cost: "0" };
-            }
-
-            function Card(message) {
-                return {
-                    id: message.data.Id,
-                    name: message.data.Name,
-                    cost: message.data.Cost,
-                    count: 1,
-                    image: "<img src='http://wow.zamimg.com/images/hearthstone/cards/enus/medium/" + message.data.Id + ".png' />"
-                }
-            }
-
-            function playersTurn() {
-                // re-calculate possible cards to play
-                var possibleCardsOnThisTurn = [];
-                _.each($scope.decks, function (item) {
-                    var matchedCards = _.filter(item.cards, function (card) {
-                        if (card.cost <= $scope.turnNumber) {
-                            return card;
+            
+                        $scope.cardDisplayClass = function (card) {
+                            if (card.timesPlayed === 0)
+                                return "";
+                            return card.timesPlayed >= card.count ? 'hide-card' : 'blur-card';
                         }
-                    });
-                    possibleCardsOnThisTurn = _.concat(possibleCardsOnThisTurn, matchedCards);
-                });
-                $scope.possibleCardsToPlay = _.uniqBy(possibleCardsOnThisTurn, 'cardId');
-            }
-
+                        $.connection.hub.start().done(function (err) {
+                            $scope.loaded = true;
+                            $scope.$apply();
+                        });
+            
+                        /*$scope.changeDeck = function (deckLink) {
+                            var decks = _.filter($scope.decks, function(d) {
+                                return d.isChecked;
+                            });
+                            var possibleCardsOnThisTurn = [];
+                            _.each(decks, function(item) {
+                                var matchedCards = _.filter(item.cards, function(card) {
+                                    if (card.cost <= $scope.turnNumber) {
+                                        return card;
+                                    }
+                                });
+                                possibleCardsOnThisTurn = _.concat(possibleCardsOnThisTurn, matchedCards);
+                            });
+                           
+                            $scope.possibleCardsToPlay = _.uniqBy(possibleCardsOnThisTurn, 'cardId');
+                        }#1#
+            
+                        function Coin() {
+                            return { id: '0', name: "Coin", cost: "0" };
+                        }
+            
+                        function Card(message) {
+                            return {
+                                id: message.data.Id,
+                                name: message.data.Name,
+                                cost: message.data.Cost,
+                                count: 1,
+                                image: "<img src='http://wow.zamimg.com/images/hearthstone/cards/enus/medium/" + message.data.Id + ".png' />"
+                            }
+                        }
+                    
+            
+            */
         }]);
 })();

@@ -60,3 +60,25 @@ div.deck-row .type {
     width: 60px;
     margin-right: 30px !important;
 }
+.mana-icon {
+    top: -3px;
+    z-index: 5;
+    height: 30px;
+    width: 40px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+.mana-icon-cost {
+    font-size: 18px;
+    color: #ffffff;
+    position: absolute;
+    top: 2px;
+    left: 10px;
+    z-index: 6;
+    text-shadow: -1px -1px 0 #000000,1px -1px 0 #000000,-1px 1px 0 #000000,1px 1px 0 #000000;
+    cursor: pointer;
+}
+.mana-icon-img {
+    width: 30px;
+    height: 30px;   
+}

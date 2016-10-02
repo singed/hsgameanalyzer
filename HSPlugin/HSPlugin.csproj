@@ -33,9 +33,9 @@
     <Reference Include="HearthDb">
       <HintPath>..\_shared\HearthDb.dll</HintPath>
     </Reference>
-    <Reference Include="HearthstoneDeckTracker, Version=0.15.6.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="HearthstoneDeckTracker, Version=1.1.0.3, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\hearstone deck tracker\Hearthstone-Deck-Tracker\Hearthstone Deck Tracker\bin\x86\Debug\HearthstoneDeckTracker.exe</HintPath>
+      <HintPath>..\..\Hearthstone-Deck-Tracker\Hearthstone Deck Tracker\bin\x86\Debug\HearthstoneDeckTracker.exe</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Hearthstone_Deck_Tracker.Plugins;
 using System.Windows.Controls;
@@ -38,9 +39,9 @@ namespace HSPlugin
             };
             _connection = _factory.CreateConnection();
             _model = _connection.CreateModel();
-            _model.ExchangeDeclare(ExchangeName, ExchangeType.Direct);
+            _model.ExchangeDeclare(ExchangeName, ExchangeType.Direct, true);
 
-            _model.QueueDeclare(QueueName, false, false, false, null);
+            _model.QueueDeclare(QueueName, true, false, false, null);
             _model.QueueBind(QueueName, ExchangeName, "");
             _properties = _model.CreateBasicProperties();
             _properties.Persistent = true;
@@ -60,7 +61,23 @@ namespace HSPlugin
             GameEvents.OnGameStart.Add(OnGameStart);
             GameEvents.OnGameEnd.Add(OnGameEnd);
             GameEvents.OnOpponentHeroPower.Add(OnOpponentHeroPower);
+            GameEvents.OnGameWon.Add(OnGameWon);
+            GameEvents.OnGameLost.Add(OnGameLost);
 
+        }
+
+        private void OnGameWon()
+        {
+            var message = new HsGameMessage(HSGameEventTypes.OnGameWon);
+            message.Data = _gameId;
+            PublishMessage(message);
+        }
+
+        private void OnGameLost()
+        {
+            var message = new HsGameMessage(HSGameEventTypes.OnGameLost);
+            message.Data = _gameId;
+            PublishMessage(message);
         }
 
         private void OnOpponentHeroPower()

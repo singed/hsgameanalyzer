@@ -14,6 +14,8 @@
         OnOpponentPlayToHand,
         OnGameEnd,
         OnPlayerDraw,
-        OnOpponentHeroPower
+        OnOpponentHeroPower,
+        OnGameLost,
+        OnGameWon
     }
 }
