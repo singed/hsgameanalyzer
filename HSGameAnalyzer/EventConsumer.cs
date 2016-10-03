@@ -29,7 +29,6 @@ namespace HSGameAnalyzer
         private IModel _model;
         private IBasicProperties _properties;
 
-        private readonly MongoRepository<HSGame> _gameRepository;
         public EventConsumer()
         {
             MessageHandler handler = new MessageHandler();
@@ -49,8 +48,6 @@ namespace HSGameAnalyzer
 
             /*var consumer = new ConsumeDelegate(Poll);
             consumer.Invoke();*/
-            _gameRepository = new MongoRepository<HSGame>();
-
 
         }
 
@@ -86,7 +83,6 @@ namespace HSGameAnalyzer
                     };
                     message.Data = game;
                     hubContext.Clients.All.sendMessage(message);
-                    _gameRepository.Add(Mapper.Map<HSGame>(game));
                     break;
                 case HSGameEventTypes.OnTurnStart:
                     hubContext.Clients.All.sendMessage(message);

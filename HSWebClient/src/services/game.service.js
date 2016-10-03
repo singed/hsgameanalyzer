@@ -91,7 +91,6 @@
                 this.game.id = message.data.gameId;
             }
             else if (message.eventType === constants.gameEvents.onGameLost || message.eventType === constants.gameEvents.onGameWon) {
-                debugger;
                 var deck = _.last(_.orderBy(this.game.decks, ['percentage']));
                 var won = message.eventType === constants.gameEvents.onGameWon ? true : false;
                 var game = {

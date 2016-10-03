@@ -11,8 +11,8 @@ namespace HSCore.Entities
         public string GameId { get; set; }
         public string OpponentClass { get; set; }
         public string ProbableDeckId { get; set; }
+        public string ProbableDeckType { get; set; }
         public bool Won { get; set; }
-        //public IEnumerable<HSTurn> Turns { get; set; }
     }
 
     public class HSGameDto
@@ -21,6 +21,6 @@ namespace HSCore.Entities
         public string OpponentClass { get; set; }
         public string ProbableDeckId { get; set; }
         public string ProbableDeckType { get; set; }
-        //public IEnumerable<HSTurn> Turns { get; set; }
+        public bool Won { get; set; }
     }
 }
