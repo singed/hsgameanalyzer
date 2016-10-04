@@ -28,7 +28,6 @@
             $.connection.hub.url = 'http://localhost:8088/signalr/hubs';
             var proxy = $.connection.hshub;
             $scope.classes = constants.classes;
-
             
             managementService.proxy = proxy;
             gameService.proxy = proxy;
@@ -42,10 +41,15 @@
             $scope.loaded = false;
             $scope.getDecks = function (className) {
                 managementService.getDecks(className).then(applyDecks);
+                $scope.newGameInit = false;
             }
 
             $scope.filterByCost = function (number) {
                 managementService.filterByCost(number);
+            }
+            $scope.startNewGame = function() {
+                $scope.newGameInit = true;
+                gameService.startNewGame();
             }
 
             $scope.changeDeck = function (deckLink) {

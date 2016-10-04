@@ -6,7 +6,7 @@
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.4.min.js"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.min.js"></script>
 
-    <link href="/src/styles/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/src/styles/bootstrap.min.css" rel="stylesheet" />
     <link href="/src/styles/styles.css" rel="stylesheet" />
     <script src="../bower_components/lodash/dist/lodash.min.js"></script>
     <script src="../bower_components/angular/angular.min.js"></script>
@@ -22,9 +22,8 @@
 </head>
 <body ng-app="hsapp">
     <div ng-cloak ng-controller="MainController">
-        <nav class="navbar navbar-inverse navbar-fixed-top">
+        <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container">
-
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                         <span class="sr-only">Toggle navigation</span>
@@ -32,23 +31,50 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
+                    <a class="navbar-brand" href="#">HS Tracker</a>
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
-                    <div ng-show="loaded">
-                        <a class="navbar-brand">Pick your opponent:&nbsp;&nbsp;&nbsp;</a>
-                        <a class="navbar-brand classImage" style="background: url(/src/images/classes/{{class}}.png);" ng-repeat="class in classes" ng-click="getDecks(class)" href="#"></a>
-                     
-                    </div>
-                </div>
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="#">Home</a></li>
+                     <!--   <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Action</a></li>
+                                <li><a href="#">Another action</a></li>
+                                <li><a href="#">Something else here</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li class="dropdown-header">Nav header</li>
+                                <li><a href="#">Separated link</a></li>
+                                <li><a href="#">One more separated link</a></li>
+                            </ul>
+                        </li>-->
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#" ng-click="startNewGame()"  data-toggle="collapse" data-target="#navbar">Start New Game</a></li>
+                       <!-- <li><a href="../navbar-static-top/">Static top</a></li>
+                        <li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>-->
+                    </ul>
+                </div><!--/.nav-collapse -->
             </div>
         </nav>
+        <div class="container" ng-show="newGameInit">
+            <div class="col-lg-2" style="padding-top: 25px;">Pick your opponent:</div>
+            <div class="col-lg-10">
+                <a ng-show="loaded" class="navbar-brand classImage" style="background: url(/src/images/classes/{{class}}.png);" ng-repeat="class in classes" ng-click="getDecks(class)" href="#"></a>
+            </div>
+        </div>
+        <div>
+
+        </div>
         <div>
             <div class="col-lg-12">
-                <h2>Panels</h2>
+                <h2></h2>
             </div>
             <div class="row">
                 <div class="col-lg-4">
-                    <div class="panel panel-primary" >
+                    <div class="panel panel-primary">
                         <div class="panel-heading" style="background-color: #4b0082;">
                             <ul class="nav nav-pills">
                                 <li style="margin-top: 5px;">Turn number <span class="badge" style="margin-right: 15px;">{{game.turnNumber}}</span></li>
@@ -56,7 +82,7 @@
                                 <li ng-repeat="num in [] | range:10" ng-click="filterByCost(num)">
                                     <span class="mana-icon"><img src="/src/images/mana.png" class="mana-icon-img"></span><span class="mana-icon-cost">{{num}}</span>
                                 </li>
-                                <li><span class="mana-icon" ><img src="/src/images/mana.png" class="mana-icon-img"></span><span class="mana-icon-cost" style="left: 5px;">10</span></li>
+                                <li><span class="mana-icon"><img src="/src/images/mana.png" class="mana-icon-img"></span><span class="mana-icon-cost" style="left: 5px;">10</span></li>
                             </ul>
                         </div>
                         <div class="panel-body">
