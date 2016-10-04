@@ -107,7 +107,6 @@
             } else {
                 console.log('event type untracked ' + message.eventType);
             }
-
         }
         function recalcPossiblePlays() {
             // re-calculate possible cards to play
