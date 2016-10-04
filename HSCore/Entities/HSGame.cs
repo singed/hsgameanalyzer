@@ -9,18 +9,18 @@ namespace HSCore.Entities
     public class HSGame : Entity
     {
         public string GameId { get; set; }
-        public HSGameEventTypes EventType { get; set; }
         public string OpponentClass { get; set; }
-        public string ProbableOpponentDeckId { get; set; }
-        public bool IsWon { get; set; }
+        public string ProbableDeckId { get; set; }
+        public string ProbableDeckType { get; set; }
+        public bool Won { get; set; }
     }
 
     public class HSGameDto
     {
         public string GameId { get; set; }
-        public HSGameEventTypes EventType { get; set; }
         public string OpponentClass { get; set; }
-        public string ProbableOpponentDeckId { get; set; }
-        public bool IsWon { get; set; }
+        public string ProbableDeckId { get; set; }
+        public string ProbableDeckType { get; set; }
+        public bool Won { get; set; }
     }
 }

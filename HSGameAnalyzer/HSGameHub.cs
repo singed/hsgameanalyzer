@@ -16,15 +16,6 @@ namespace HSGameAnalyzer
     [HubName("hshub")]
     public class HSGameHub : Hub
     {
-        /* public void GetDecks(string name)
-         {
-             var _deckRepository = new MongoRepository<HSDeck>();
-             /*var decks = _deckRepository.Where(d => d.Class == deckClass.ToUpper()).ToList();#1#
-             string[] decks = { "Item1", "Item2", "Item3", "Item4" }; 
-
-             Clients.All.applyDecks(decks);
-         }*/
-
         public IEnumerable<HSDeckDto> GetDecks(string className)
         {
             MongoRepository<HSDeck>_deckRepository = new MongoRepository<HSDeck>();
@@ -46,17 +37,7 @@ namespace HSGameAnalyzer
             turnRepository.Add(turn);
         }
 
-        public void OnGameLost(HSGameDto gameDto)
-        {
-            OnGameEnd(gameDto);
-        }
-
-        public void OnGameWon(HSGameDto gameDto)
-        {
-            OnGameEnd(gameDto);
-        }
-
-        private void OnGameEnd(HSGameDto gameDto)
+        public void EndGame(HSGameDto gameDto)
         {
             MongoRepository<HSGame> gameRepository = new MongoRepository<HSGame>();
             var updatedGame = Mapper.Map<HSGame>(gameDto);

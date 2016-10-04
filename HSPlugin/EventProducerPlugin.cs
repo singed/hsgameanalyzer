@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Hearthstone_Deck_Tracker.Plugins;
 using System.Windows.Controls;
@@ -60,20 +61,22 @@ namespace HSPlugin
             GameEvents.OnGameStart.Add(OnGameStart);
             GameEvents.OnGameEnd.Add(OnGameEnd);
             GameEvents.OnOpponentHeroPower.Add(OnOpponentHeroPower);
-            GameEvents.OnGameLost.Add(OnGameLost);
             GameEvents.OnGameWon.Add(OnGameWon);
+            GameEvents.OnGameLost.Add(OnGameLost);
 
         }
 
         private void OnGameWon()
         {
-            var message = new HsGameMessage(HSGameEventTypes.OnGameWon) { Data = _gameId };
+            var message = new HsGameMessage(HSGameEventTypes.OnGameWon);
+            message.Data = _gameId;
             PublishMessage(message);
         }
 
         private void OnGameLost()
         {
-            var message = new HsGameMessage(HSGameEventTypes.OnGameLost) {Data = _gameId };
+            var message = new HsGameMessage(HSGameEventTypes.OnGameLost);
+            message.Data = _gameId;
             PublishMessage(message);
         }
 
@@ -120,12 +123,12 @@ namespace HSPlugin
             PublishMessage(message);
         }
 
-     /*   private void OnGameEnd()
+        private void OnGameEnd()
         {
             var message = new HsGameMessage(HSGameEventTypes.OnGameEnd);
             message.Data = _gameId;
             PublishMessage(message);
-        }*/
+        }
 
 
         private void OnOpponentHandDiscard(Card card)

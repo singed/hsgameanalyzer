@@ -78,6 +78,9 @@
     <Content Include="src\controllers\game.controller.js" />
     <Content Include="src\directives.js" />
     <Content Include="src\index.html" />
+    <Content Include="src\services\game.service.js" />
+    <Content Include="src\services\management.service.js" />
+    <Content Include="src\services\gameModels.js" />
     <Content Include="src\styles\bootstrap.min.css" />
     <Content Include="src\styles\styles.css" />
     <Content Include="Web.config" />
