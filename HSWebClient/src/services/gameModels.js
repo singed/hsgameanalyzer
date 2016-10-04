@@ -3,32 +3,30 @@
 
     var serviceId = 'gameModels';
 
-    angular.module('hsapp').service(serviceId, [
-        'constants', GameModels]);
+    angular.module('hsapp').service(serviceId, GameModels);
 
-    function GameModels(constants) {
-        return {
-            Card: Card,
-            Coin: Coin,
-            game: {
-                playerHand: [],
-                opponentHand: [],
-                opponentCardsPlayed: [],
-                possibleCardsToPlay: [],
-                turnNumber: 1,
-                decks:[],
-                playersTurn: false
-            },
-            initNewGame: init
-        }
+    function GameModels() {
+        this.game = {
+            playerHand: [],
+            opponentHand: [],
+            opponentCardsPlayed: [],
+            possibleCardsToPlay: [],
+            turnNumber: 1,
+            decks: [],
+            playersTurn: false
+        };
+        this.Card = Card;
+        this.Coin = Coin;
+        this.clear = clear;
 
-        function init() {
-            this.playerHand = [];
-            this.opponentHand = [];
-            this.opponentCardsPlayed = [];
-            this.possibleCardsToPlay = [];
-            this.turnNumber = 1;
-            this.playersTurn = false;
+        function clear() {
+            this.game.playerHand = [];
+            this.game.opponentHand = [];
+            this.game.opponentCardsPlayed = [];
+            this.game.possibleCardsToPlay = [];
+            this.game.turnNumber = 1;
+            this.game.decks = [];
+            this.game.playersTurn = false;
         }
 
         function Card(message) {

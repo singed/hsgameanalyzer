@@ -11,7 +11,8 @@
             startNewGame: startNewGame,
             game: gameModels.game,
             recalcPossiblePlays: recalcPossiblePlays,
-            proxy: null
+            proxy: null,
+            gameId:0
         };
 
         return service;
@@ -19,7 +20,7 @@
         var playersTurn, gameStartFlag, gameCounter, playersFirstTurn;
 
         function startNewGame() {
-            gameModels.initNewGame();
+            gameModels.clear();
             gameStartFlag = true;
             gameCounter = 0;
             playersFirstTurn = false;
@@ -77,7 +78,7 @@
                     }
                 });
                 var turnData = {
-                    gameId: service.game.id,
+                    gameId: service.gameId,
                     turnNumber: this.game.turnNumber,
                     cardId: playedCard.id
                 }
@@ -88,13 +89,13 @@
             }
             else if (message.eventType === constants.gameEvents.onGameStart) {
                 this.startNewGame();
-                this.game.id = message.data.gameId;
+                service.gameId = message.data.gameId;
             }
             else if (message.eventType === constants.gameEvents.onGameLost || message.eventType === constants.gameEvents.onGameWon) {
                 var deck = _.last(_.orderBy(this.game.decks, ['percentage']));
                 var won = message.eventType === constants.gameEvents.onGameWon ? true : false;
                 var game = {
-                    gameId: service.game.id,
+                    gameId: service.gameId,
                     opponentClass: service.game.opponentClass,
                     probableDeckId: deck.id,
                     probableDeckType: deck.type,

@@ -22,7 +22,7 @@
     });
 
     angular.module('hsapp')
-        .controller('MainController', ['$scope', 'constants', 'managementService', 'gameService', function ($scope, constants, managementService, gameService) {
+        .controller('MainController', ['$scope', 'constants', 'managementService', 'gameService', 'gameModels', function ($scope, constants, managementService, gameService, gameModels) {
 
             // signalr init
             $.connection.hub.url = 'http://localhost:8088/signalr/hubs';
@@ -34,9 +34,9 @@
 
 
             // 1. start(init) new game
-            managementService.game = gameService.game;
-            $scope.game = gameService.game;
-            gameService.startNewGame();
+            /*managementService.game = gameService.game;*/
+            $scope.game = gameModels.game;
+            /*gameService.startNewGame();*/
 
             $scope.loaded = false;
             $scope.getDecks = function (className) {
