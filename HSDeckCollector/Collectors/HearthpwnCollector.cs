@@ -33,7 +33,8 @@ namespace HSDeckCollector.Collectors
             int decksCollected = 0;
             _navigationManager.GoToPage(SiteUrl);
 
-            var classListCount = _actionManager.TryFindElementsByJquery(".class-tabs li a span").Skip(1).ToList().Count;
+            // document.querySelectorAll('ul.class-tabs li')
+            var classListCount = _actionManager.TryFindElementsByJs(".class-tabs li a span").Skip(1).ToList().Count;
             for (int i = 0; i < classListCount; i++)
             {
                 int errorsCount = 0;
@@ -44,16 +45,20 @@ namespace HSDeckCollector.Collectors
                         _navigationManager.GoToPage(SiteUrl);
                     }
                     int counter = i + 2;
-                    var dclass = _actionManager.TryFindElementByJquery(".class-tabs li a[data-class-id=" + counter + "]");
+                    //document.querySelectorAll('.decks li a')
+                    var dclass = _actionManager.TryFindElementByJs(".class-tabs li a[data-class-id='" + counter + "']");
                     dclass.Click();
 
+                    Thread.Sleep(3000);
 
+                    
                     // check if deck is already exist
                     // by name
                     var decksLinks = _actionManager.TryFindElementsByJquery(".decks li a").Select(x => x.GetAttribute("href")).Take(6).ToList();
                     var decksInBase = _deckRepository.Where(d => decksLinks.Contains(d.Link)).Select(x => x.Link).ToList();
 
                     string deckClass = dclass.Text;
+                    Console.WriteLine("=== Collecting {0} ====", deckClass);
                     foreach (var link in decksLinks.Where(x => !decksInBase.Contains(x)))
                     {
                         try

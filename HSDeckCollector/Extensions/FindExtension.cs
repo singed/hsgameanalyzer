@@ -32,6 +32,67 @@ namespace HSDeckCollector.Extensions
             return TryFindElementByJquery(driver, selector, 30, false);
         }
 
+        public static IWebElement TryFindElementByJs(this IWebDriver driver, string selector)
+        {
+            if (string.IsNullOrEmpty(selector))
+                throw new Exception("selector is empty");
+            IWebElement result = null;
+            try
+            {
+                driver.Wait(d =>
+                {
+                    try
+                    {
+                        result = (IWebElement)d.JsExecuteJavaScript(string.Format("return document.querySelector(\"{0}\")", selector));
+                        return (result != null);
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }, TimeSpan.FromSeconds(30));
+            }
+            catch
+            {
+                return null;
+            }
+            return result;
+        }
+
+        public static List<IWebElement> TryFindElementsByJs(this IWebDriver driver, string selector, int timeout =30)
+        {
+            var temp = new List<IWebElement>();
+
+            if (string.IsNullOrEmpty(selector))
+                throw new Exception("selector is empty");
+            try
+            {
+                // IN FF THIS 'WAIT' RETURNS 0 -> EXCEPTION, WHILE OK IN CHROME
+                driver.Wait(d =>
+                {
+                    try
+                    {
+                            var elements =
+                                  (IList<IWebElement>)  driver.JsExecuteJavaScript(string.Format("return document.querySelectorAll(\"{0}\")", selector));
+                            if (elements != null)
+                                temp.AddRange(elements);
+                      
+                        driver.CheckErrorsOnPage();
+                        return true;
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }, TimeSpan.FromSeconds(timeout));
+            }
+            catch
+            {
+                return temp;
+            }
+            return temp;
+        }
+
         /// <summary>
         /// Finds web element by jQuery selector
         /// </summary>

@@ -101,6 +101,16 @@ namespace HSDeckCollector.Managers
             return Driver.TryFindElementByJquery(selector);
         }
 
+        public IWebElement TryFindElementByJs(string selector)
+        {
+            return Driver.TryFindElementByJs(selector);
+        }
+
+        public IList<IWebElement> TryFindElementsByJs(string selector)
+        {
+            return Driver.TryFindElementsByJs(selector);
+        }
+
         /// <summary>
         /// Tries to find disabled web element by jQuery
         /// </summary>

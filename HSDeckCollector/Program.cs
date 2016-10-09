@@ -17,8 +17,8 @@ namespace HSDeckCollector
             var hearthpwnCollector = new HearthpwnCollector(navigationManager, actionManager);
             hearthpwnCollector.Collect();
 
-            /*  HsTopDecksCollector hsTopDecksCollector = new HsTopDecksCollector(navigationManager, actionManager);
-            hsTopDecksCollector.Collect();*/
+             HsTopDecksCollector hsTopDecksCollector = new HsTopDecksCollector(navigationManager, actionManager);
+            hsTopDecksCollector.Collect();
 
             Console.ReadKey();
         }
