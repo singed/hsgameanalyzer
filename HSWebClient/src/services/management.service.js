@@ -64,7 +64,6 @@
                     card.timesPlayed = 0;
                     card.image = "<img style='margin-bottom:50pxl' src='http://wow.zamimg.com/images/hearthstone/cards/enus/medium/" + card.cardId + ".png' />";
                     card.imageUrl = "/src/images/cards/" + card.cardId + ".png";
-                    card.hidden = false;
                 });
                 return item;
             });

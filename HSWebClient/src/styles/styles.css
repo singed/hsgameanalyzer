@@ -83,6 +83,6 @@ div.deck-row .type {
     width: 30px;
     height: 30px;   
 }
-.hs-list-item.crossed {
+.crossed {
     text-decoration: line-through;   
 }

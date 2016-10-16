@@ -74,9 +74,6 @@
                     var matchedCard = _.find(item.cards, { cardId: playedCard.id });
                     if (!!matchedCard) {
                         matchedCard.timesPlayed++;
-                        if (matchedCard.timesPlayed === matchedCard.count) {
-                            matchedCard.hidden = true;
-                        }
                         item.percentage += 3;
                     }
                 });
