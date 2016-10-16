@@ -61,7 +61,7 @@
                     image: "<img src='http://wow.zamimg.com/images/hearthstone/cards/enus/medium/" + message.data.Id + ".png' />"
                 };
 
-                // check is card already played, push it to the played cards
+                // check is card already played, push it to the played cards and cross out from the decks
                 var index = _.indexOf(this.game.opponentCardsPlayed, _.find(this.game.opponentCardsPlayed, { id: playedCard.id }));
                 if (index >= 0) {
                     this.game.opponentCardsPlayed[index].count = Number(this.game.opponentCardsPlayed[index].count) + 1;
@@ -70,13 +70,18 @@
                 }
 
                 // re-calculate deck overlap
-
                 _.each(this.game.decks, function (item) {
                     var matchedCard = _.find(item.cards, { cardId: playedCard.id });
                     if (!!matchedCard) {
+                        matchedCard.timesPlayed++;
+                        if (matchedCard.timesPlayed === matchedCard.count) {
+                            matchedCard.hidden = true;
+                        }
                         item.percentage += 3;
                     }
                 });
+
+                // save turn 
                 var turnData = {
                     gameId: service.gameId,
                     turnNumber: this.game.turnNumber,

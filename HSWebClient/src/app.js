@@ -21,14 +21,33 @@
         };
     });
 
+    angular.module('hsapp').filter('filterByCard', function () {
+        return function (decks, cardName) {
+            _.each(decks, function (item) {
+                var result = _.some(item.cards, function(elm) {
+                    return elm.name.indexOf(cardName.toUpperCase()) !== -1;
+                });
+                item.isVisible = true;
+
+                if (!result) {
+                    item.isVisible = false;
+                }
+            });
+            return decks;
+        };
+    });
+
     angular.module('hsapp')
-        .controller('MainController', ['$scope', 'constants', 'managementService', 'gameService', 'gameModels', function ($scope, constants, managementService, gameService, gameModels) {
+        .controller('MainController', ['$scope', 'constants', 'managementService', 'gameService', 'gameModels', '$filter', function ($scope, constants, managementService, gameService, gameModels, $filter) {
 
             // signalr init
             $.connection.hub.url = 'http://localhost:8088/signalr/hubs';
             var proxy = $.connection.hshub;
             $scope.classes = constants.classes;
-            
+            $scope.cardName = '';
+            $scope.$watch('cardName', function (cardName) {
+                $scope.game.decks = $filter('filterByCard')($scope.game.decks, cardName);
+            });
             managementService.proxy = proxy;
             gameService.proxy = proxy;
 

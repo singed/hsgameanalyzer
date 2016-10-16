@@ -121,10 +121,12 @@
                     <div class="panel panel-warning">
                         <div class="panel-heading">
                             <h3 class="panel-title">Possible Decks</h3>
+                            <label for="cardFilter">Filter by card</label>
+                            <input type="text" id="cardFilter" ng-model="cardName" />
                         </div>
                         <div class="panel-body">
                             <ul class="list-group" id="decksList">
-                                <li class="list-group-item hs-list-item" ng-repeat="deck in game.decks | orderBy:'-percentage'">
+                                <li class="list-group-item hs-list-item"  ng-show="deck.isVisible"  ng-repeat="deck in game.decks | orderBy:'-percentage' | filter:filterByCard(cardName)">
                                     <div class="row deck-row">
                                         <div class="col-xs-1 ">
                                             <input type="checkbox" ng-model="deck.isChecked" ng-change="changeDeck(deck.link)" />
@@ -135,7 +137,7 @@
                                     </div>
                                     <div id="deck{{$index}}" class="collapse">
                                         <ul class="list-group">
-                                            <li class="list-group-item hs-list-item card-image-tooltip" ng-class="cardDisplayClass(card)" ng-repeat="card in deck.cards | orderBy:'cost'" data-toggle="tooltip" title="{{card.image}}">
+                                            <li class="list-group-item hs-list-item card-image-tooltip" ng-show="!card.hidden" ng-class="cardDisplayClass(card)" ng-repeat="card in deck.cards | orderBy:'cost'" data-toggle="tooltip" title="{{card.image}}">
                                                 <div class="row card-row">
                                                     <div class="col-xs-1 cost">{{card.cost}}</div>
                                                     <div class="col-xs-10 name">
