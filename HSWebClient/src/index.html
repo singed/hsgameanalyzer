@@ -137,11 +137,11 @@
                                     </div>
                                     <div id="deck{{$index}}" class="collapse">
                                         <ul class="list-group">
-                                            <li class="list-group-item hs-list-item card-image-tooltip" ng-show="!card.hidden" ng-class="cardDisplayClass(card)" ng-repeat="card in deck.cards | orderBy:'cost'" data-toggle="tooltip" title="{{card.image}}">
+                                            <li class="list-group-item hs-list-item card-image-tooltip"  ng-class="cardDisplayClass(card)" ng-repeat="card in deck.cards | orderBy:'cost'" data-toggle="tooltip" title="{{card.image}}">
                                                 <div class="row card-row">
                                                     <div class="col-xs-1 cost">{{card.cost}}</div>
                                                     <div class="col-xs-10 name">
-                                                        <div style="float: left;">{{card.name}}</div>
+                                                        <div style="float: left;" ng-class="{'crossed': card.hidden : ''}">{{card.name}}</div>
                                                         <div class="card-image" style="background-image: url('{{card.imageUrl}}')"></div>
                                                     </div>
                                                     <div class="col-xs-1 count">{{card.count}}</div>
