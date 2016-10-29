@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using Hearthstone_Deck_Tracker.Plugins;
 using System.Windows.Controls;
 using HearthDb;
@@ -45,7 +46,7 @@ namespace HSPlugin
             _model.QueueBind(QueueName, ExchangeName, "");
             _properties = _model.CreateBasicProperties();
             _properties.Persistent = true;
-            
+
 
         }
         public void OnLoad()
@@ -63,8 +64,9 @@ namespace HSPlugin
             GameEvents.OnOpponentHeroPower.Add(OnOpponentHeroPower);
             GameEvents.OnGameWon.Add(OnGameWon);
             GameEvents.OnGameLost.Add(OnGameLost);
-
         }
+
+        public object OnPlay { get; set; }
 
         private void OnGameWon()
         {
@@ -89,7 +91,7 @@ namespace HSPlugin
 
         private void OnPlayerDraw(Card card)
         {
-            var message = new HsGameMessage(HSGameEventTypes.OnOpponentGet);
+            var message = new HsGameMessage(HSGameEventTypes.OnPlayerDraw);
             message.Data = new { GameId = _gameId, Card = card };
             PublishMessage(message);
         }
@@ -97,7 +99,7 @@ namespace HSPlugin
         private void OnOpponentGet()
         {
             var message = new HsGameMessage(HSGameEventTypes.OnOpponentGet);
-            message.Data = new {GameId = _gameId, CoinTo="Opponent"};
+            message.Data = new { GameId = _gameId, CoinTo = "Opponent" };
             PublishMessage(message);
         }
 
@@ -117,9 +119,17 @@ namespace HSPlugin
 
         private void OnGameStart()
         {
+            var game = Core.Game;
             var message = new HsGameMessage(HSGameEventTypes.OnGameStart);
             _gameId = Guid.NewGuid();
-            message.Data = _gameId;
+            message.Data = new
+            {
+                GameId = _gameId,
+                GameMode = game.CurrentGameMode, // get from enum
+                Region = game.CurrentRegion, // get from enum
+                OpponentName = game.Opponent.Name,
+                OpponentClass = game.Opponent.Class
+            };
             PublishMessage(message);
         }
 
@@ -130,11 +140,10 @@ namespace HSPlugin
             PublishMessage(message);
         }
 
-
         private void OnOpponentHandDiscard(Card card)
         {
             var message = new HsGameMessage(HSGameEventTypes.OnOpponentPlay);
-            
+
             message.Data = new
             {
                 GameId = _gameId,
@@ -146,6 +155,7 @@ namespace HSPlugin
 
         private void OnOpponentPlay(Card card)
         {
+
             var message = new HsGameMessage(HSGameEventTypes.OnOpponentPlay);
             message.Data = new
             {
@@ -168,7 +178,15 @@ namespace HSPlugin
         private void OnTurnStart(ActivePlayer player)
         {
             var message = new HsGameMessage(HSGameEventTypes.OnTurnStart);
-            message.Data = player;
+            var game = Core.Game;
+            message.Data = new
+            {
+                GameId = _gameId,
+                GameMode = game.CurrentGameMode, // get from enum
+                Region = game.CurrentRegion, // get from enum
+                OpponentName = game.Opponent.Name,
+                OpponentClass = game.Opponent.Class
+            }; ;
             PublishMessage(message);
         }
 
@@ -200,7 +218,7 @@ namespace HSPlugin
         public string Description => "Data Transmitter";
         public string ButtonText => "Settings";
         public string Author => "AlexP";
-        public Version Version =>new Version(0,99);
+        public Version Version => new Version(0, 99);
         public MenuItem MenuItem
         {
             get { return null; }
