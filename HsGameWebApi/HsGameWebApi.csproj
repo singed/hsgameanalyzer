@@ -112,6 +112,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BrowserJsonFormatter.cs" />
     <Compile Include="BusPublisher.cs" />
     <Compile Include="GameController.cs" />
     <Compile Include="Startup.cs" />

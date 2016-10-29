@@ -23,18 +23,20 @@ namespace HsGameWebApi
             HttpConfiguration config = new HttpConfiguration();
 
             // enable json formatter
-            JsonMediaTypeFormatter mediaTypeFormatter1 = new JsonMediaTypeFormatter();
-            mediaTypeFormatter1.SerializerSettings.ContractResolver = (IContractResolver)new CamelCasePropertyNamesContractResolver();
-            mediaTypeFormatter1.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
-            JsonMediaTypeFormatter mediaTypeFormatter2 = mediaTypeFormatter1;
+          
             config.Formatters.Clear();
-            config.Formatters.Add((MediaTypeFormatter)mediaTypeFormatter2);
-            config.Formatters.Add((MediaTypeFormatter)new FormUrlEncodedMediaTypeFormatter());
+            config.Formatters.Add(new JsonMediaTypeFormatter());
+            //config.Formatters.Add(new BrowserJsonFormatter());
+            //config.Formatters.Add(new BsonMediaTypeFormatter());
 
             //Enabling Cross-Origin Requests
             config.EnableCors(new EnableCorsAttribute("*", "*", "*"));
 
-
+            config.Routes.MapHttpRoute(
+         name: "PostMethod",
+         routeTemplate: "api/game/{message}",
+         defaults: new { id = RouteParameter.Optional }
+        );
             // routes config
             config.Routes.MapHttpRoute(
              name: "DefaultApi",
