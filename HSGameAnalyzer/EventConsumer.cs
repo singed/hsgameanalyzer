@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,8 @@ namespace HSGameAnalyzer
         private const string ExchangeName = "HsAnalyzer";
         private const string QueueName = "HsEventsQueue";
         Subscription _subscription;
+        private readonly MongoRepository<HSGame> _gameRepository;
+        private readonly MongoRepository<HSDeck> _deckRepository;
         ConnectionFactory _factory;
         private IConnection _connection;
         private IModel _model;
@@ -31,7 +34,6 @@ namespace HSGameAnalyzer
 
         public EventConsumer()
         {
-            MessageHandler handler = new MessageHandler();
             _factory = new ConnectionFactory
             {
 
@@ -45,10 +47,8 @@ namespace HSGameAnalyzer
             _model.QueueBind(QueueName, ExchangeName, "");
             _model.BasicQos(0, 1, false);
             _subscription = new Subscription(_model, QueueName, false);
-
-            /*var consumer = new ConsumeDelegate(Poll);
-            consumer.Invoke();*/
-
+            _gameRepository = new MongoRepository<HSGame>();
+            _deckRepository= new MongoRepository<HSDeck>();
         }
 
         public void ConsumeDat()
@@ -73,18 +73,22 @@ namespace HSGameAnalyzer
         private void DisplayMessage(HsGameMessage message)
         {
             var hubContext = GlobalHost.ConnectionManager.GetHubContext<HSGameHub>();
+            HSGameDto gameDto;
             switch (message.EventType)
             {
                 case HSGameEventTypes.OnGameStart:
-                    string gameId = message.Data.ToString();
-                    var game = new HSGameDto()
-                    {
-                        GameId = gameId,
-                    };
-                    message.Data = game;
+                    CreateGame(message);
                     hubContext.Clients.All.sendMessage(message);
                     break;
                 case HSGameEventTypes.OnTurnStart:
+                    try
+                    {
+                        UpdateGameInDb(message);
+                    }
+                    catch (Exception ex)
+                    {
+                        message.Data = null;
+                    }
                     hubContext.Clients.All.sendMessage(message);
                     break;
                 case HSGameEventTypes.OnPlayerGet:
@@ -109,6 +113,59 @@ namespace HSGameAnalyzer
                     hubContext.Clients.All.sendMessage(message);
                     break;
             }
+        }
+
+        private void UpdateGameInDb(HsGameMessage message)
+        {
+            HSGameDto gameDto = message.Data.ToObject<HSGameDto>();
+            var gameEntity = _gameRepository.FirstOrDefault(x => x.GameId == gameDto.GameId);
+            gameEntity.Date = DateTime.Now;
+            gameEntity.Region = gameDto.Region;
+            gameEntity.GameMode = gameDto.GameMode;
+            gameEntity.OpponentClass = gameDto.OpponentClass;
+            gameEntity.OpponentName = gameDto.OpponentName;
+            gameEntity.OpponentRank = gameDto.OpponentRank;
+            gameEntity.PlayerClass = gameDto.PlayerClass;
+            gameEntity.PlayerName = gameDto.PlayerName;
+            gameEntity.PlayerRank = gameDto.PlayerRank;
+            gameEntity.OpponentDeckId = gameDto.OpponentDeckId;
+            gameEntity.OpponentDeckType = gameDto.OpponentDeckType;
+            gameEntity.PlayerDeckId = GetPlayerDeckArchetype(message).Item2;
+            gameEntity.PlayerDeckType = GetPlayerDeckArchetype(message).Item1;
+            gameEntity.PlayerHasCoin = gameDto.PlayerHasCoin;
+
+            _gameRepository.Update(gameEntity);
+        }
+
+        private Tuple<string,string> GetPlayerDeckArchetype(HsGameMessage message)
+        {
+            HSGameDto gameDto = message.Data.ToObject<HSGameDto>();
+
+            var deckList =_deckRepository.Where(x => x.Class == gameDto.PlayerClass.ToUpper());
+            int count = 0;
+            string deckArchetype = string.Empty;
+            string deckId = "";
+            foreach (var deck in deckList)
+            {
+                var ids = deck.Cards.Select(x => x.cardId).ToList();
+                var result = gameDto.PlayerCardsIds.Intersect(ids).ToList();
+                if (result.Count() > count)
+                {
+                    count = result.Count();
+                    deckArchetype = deck.Type;
+                    deckId = deck.Id;
+                }
+
+            }
+            
+            return new Tuple<string, string>(deckArchetype, deckId);
+        }
+
+        private void CreateGame(HsGameMessage message)
+        {
+            var gameDto = message.Data.ToObject<HSGameDto>();
+            var gameEntity = Mapper.Map<HSGame>(gameDto);
+            _gameRepository.Add(gameEntity);
         }
     }
 }
