@@ -23,7 +23,6 @@ namespace HSGameAnalyzer
             var decks = _deckRepository.Where(d => d.Class == className.ToUpper()).ToList();
             var decksDto = Mapper.Map<IEnumerable<HSDeckDto>>(decks);
 
-           
            // string serialized = JsonConvert.SerializeObject(decks);
 
             return decksDto;
@@ -40,8 +39,16 @@ namespace HSGameAnalyzer
         public void EndGame(HSGameDto gameDto)
         {
             MongoRepository<HSGame> gameRepository = new MongoRepository<HSGame>();
-            var updatedGame = Mapper.Map<HSGame>(gameDto);
-            gameRepository.Update(updatedGame);
+            var entity = gameRepository.FirstOrDefault(x => x.GameId == gameDto.GameId);
+            if (entity != null)
+            {
+                entity.Won = gameDto.Won;
+                entity.OpponentDeckId = gameDto.OpponentDeckId;
+                entity.OpponentDeckType = gameDto.OpponentDeckType;
+                entity.OpponentDeckMatch = gameDto.OpponentDeckMatch;
+                gameRepository.Update(entity);
+            }
+            
         }
     }
 }

@@ -69,7 +69,6 @@ namespace HSGameAnalyzer
 
         private delegate void ConsumeDelegate();
 
-
         private void DisplayMessage(HsGameMessage message)
         {
             var hubContext = GlobalHost.ConnectionManager.GetHubContext<HSGameHub>();

@@ -2,9 +2,9 @@
     'use strict';
 
     var serviceId = "gameService";
-    angular.module('hsapp').factory(serviceId, ['constants', 'gameModels', GameService]);
+    angular.module('hsapp').factory(serviceId, ['constants', 'gameModels', 'managementService', '$rootScope', GameService]);
 
-    function GameService(constants, gameModels) {
+    function GameService(constants, gameModels, managementService, $rootScope) {
 
         var service = {
             handleEvent: handleEvent,
@@ -17,33 +17,27 @@
 
         return service;
 
-        var playersTurn, gameStartFlag, gameCounter, playersFirstTurn;
+        var playersTurn, isGameStarted, gameCounter, playersFirstTurn;
 
         function startNewGame() {
             gameModels.clear();
-            gameStartFlag = true;
+            isGameStarted = true;
             gameCounter = 0;
             playersFirstTurn = false;
             playersTurn = false;
         }
 
         function handleEvent(message) {
-            if (message.eventType === constants.gameEvents.onPlayerGet) {
-                this.game.playerHand.push(gameModels.Coin(message));
-            }
-            else if (message.eventType === constants.gameEvents.onTurnStart) {
+            if (message.eventType === constants.gameEvents.onTurnStart) {
                 console.log('===== turn event =====');
                 playersTurn = !playersTurn;
-                if (this.game.playerHand.length > 0 && gameStartFlag) { // we have coin
-                    playersFirstTurn = false;
-                    gameStartFlag = false;
-
-                } else if (gameStartFlag) {
-                    playersFirstTurn = true;
-                    this.game.opponentHand.push(gameModels.Coin(message));
-                    gameStartFlag = false;
+                if (message.data.PlayerHasCoin !== undefined) {
+                    playersFirstTurn = !message.data.PlayerHasCoin;
+                    managementService.getDecks(message.data.OpponentClass).then(function(decks) {
+                        service.game.decks = decks;
+                        $rootScope.$apply();
+                    }); 
                 }
-
                 gameCounter++;
 
                 this.game.turnNumber = gameCounter > 1 ? gameCounter % 2 === 0 ? this.game.turnNumber : ++this.game.turnNumber : 1;
@@ -90,23 +84,25 @@
 
             }
             else if (message.eventType === constants.gameEvents.onGameStart) {
-                this.startNewGame();
-                service.gameId = message.data.gameId;
+                startNewGame();
+                service.gameId = message.data.GameId;
             }
             else if (message.eventType === constants.gameEvents.onGameLost || message.eventType === constants.gameEvents.onGameWon) {
-                var deck = _.last(_.orderBy(this.game.decks, ['percentage']));
-                var won = message.eventType === constants.gameEvents.onGameWon ? true : false;
-                var game = {
-                    gameId: service.gameId,
-                    opponentClass: service.game.opponentClass,
-                    probableDeckId: deck.id,
-                    probableDeckType: deck.type,
-                    won: won
-                };
+                var deck = _.last(_.orderBy(service.game.decks, ['percentage']));
+                if (deck) {
+                    var won = message.eventType === constants.gameEvents.onGameWon ? true : false;
+                    var game = {
+                        gameId: service.gameId,
+                        probableDeckId: deck.id,
+                        probableDeckType: deck.type,
+                        opponentDeckMatch: deck.percentage,
+                        won: won
+                    };
 
-                this.proxy.invoke('endGame', game).done(function () {
-                    console.log('game saved');
-                });
+                    this.proxy.invoke('endGame', game).done(function() {
+                        console.log('game saved');
+                    });
+                }
             } else {
                 console.log('event type untracked ' + message.eventType);
             }

@@ -20,6 +20,7 @@ namespace HSCore.Entities
         public string PlayerRank { get; set; }
         public string OpponentDeckId { get; set; }
         public string OpponentDeckType { get; set; }
+        public string OpponentDeckMatch { get; set; }
         public string PlayerDeckId { get; set; }
         public string PlayerDeckType { get; set; }
         public bool PlayerHasCoin { get; set; }
@@ -40,6 +41,7 @@ namespace HSCore.Entities
         public string PlayerRank { get; set; }
         public string OpponentDeckId { get; set; }
         public string OpponentDeckType { get; set; }
+        public string OpponentDeckMatch { get; set; }
         public string PlayerDeckId { get; set; }
         public string PlayerDeckType { get; set; }
         public bool PlayerHasCoin { get; set; }

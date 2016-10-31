@@ -45,6 +45,14 @@
             var proxy = $.connection.hshub;
             $scope.classes = constants.classes;
             $scope.cardName = '';
+            $scope.$watch('game.decks', function (decks) {
+                $('li[data-toggle="tooltip"]').tooltip({
+                    animated: 'fade',
+                    placement: 'top',
+                    html: true
+                });
+            });
+
             $scope.$watch('cardName', function (cardName) {
                 $scope.game.decks = $filter('filterByCard')($scope.game.decks, cardName);
             });
@@ -75,15 +83,10 @@
                 managementService.changeDeck(deckLink);
             }
 
-            function applyDecks(decks) {
+          /*  function applyDecks(decks) {
                 gameService.game.decks = decks;
-                $scope.$apply();
-                $('li[data-toggle="tooltip"]').tooltip({
-                    animated: 'fade',
-                    placement: 'top',
-                    html: true,
-                });
-            }
+             
+            }*/
 
             // end game
 
