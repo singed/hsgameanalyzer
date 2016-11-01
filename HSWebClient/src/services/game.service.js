@@ -93,8 +93,8 @@
                     var won = message.eventType === constants.gameEvents.onGameWon ? true : false;
                     var game = {
                         gameId: service.gameId,
-                        probableDeckId: deck.id,
-                        probableDeckType: deck.type,
+                        opponentDeckId: deck.id,
+                        opponentDeckType: deck.type,
                         opponentDeckMatch: deck.percentage,
                         won: won
                     };

@@ -71,7 +71,7 @@ namespace HSDeckCollector.Collectors
                             _navigationManager.GoToPage(link);
 
                             string deckName = _actionManager.TryFindElementByJquery(".deck-detail h2.deck-title").Text;
-                            string deckType = _actionManager.TryFindElementByJquery(".deck-details li .deck-type").Text;
+                            string deckType = _actionManager.TryFindElementsByJquery(".deck-details li .deck-type")[1].Text;
 
                             deck.Name = deckName;
                             deck.Type = deckType;
