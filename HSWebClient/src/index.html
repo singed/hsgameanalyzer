@@ -8,20 +8,10 @@
 
     <link href="/src/styles/bootstrap.min.css" rel="stylesheet" />
     <link href="/src/styles/styles.css" rel="stylesheet" />
-    <script src="../bower_components/lodash/dist/lodash.min.js"></script>
-    <script src="../bower_components/angular/angular.min.js"></script>
-
-    <script src="/src/app.js"></script>
-    <script src="/src/configuration/constants.js"></script>
-    <script src="/src/directives.js"></script>
-    <script src="/src/services/gameModels.js"></script>
-    <script src="/src/services/management.service.js"></script>
-    <script src="/src/services/game.service.js"></script>
-    <script src="http://localhost:8088/signalr/hubs"></script>
 
 </head>
-<body ng-app="hsapp">
-    <div ng-cloak ng-controller="MainController">
+<body>
+    <div ng-app="hsapp">
         <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
@@ -35,130 +25,37 @@
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="#">Home</a></li>
-                     <!--   <li><a href="#about">About</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">Action</a></li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something else here</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li class="dropdown-header">Nav header</li>
-                                <li><a href="#">Separated link</a></li>
-                                <li><a href="#">One more separated link</a></li>
-                            </ul>
-                        </li>-->
+                        <li><a ui-sref="public.game">Game</a></li>
+                        <li><a href="#/stats">Stats</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <!--<li><a href="#" ng-click="startNewGame()">Start New Game</a></li>-->
-                       <!-- <li><a href="../navbar-static-top/">Static top</a></li>
+                        <!-- <li><a href="../navbar-static-top/">Static top</a></li>
                         <li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>-->
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
         </nav>
-        <div class="container" ng-show="newGameInit">
-            <div class="col-lg-2" style="padding-top: 25px;">Pick your opponent:</div>
-            <div class="col-lg-10">
-                <a ng-show="loaded" class="navbar-brand classImage" style="background: url(/src/images/classes/{{class}}.png);" ng-repeat="class in classes" ng-click="getDecks(class)" href="#"></a>
-            </div>
+        <div >
+            <div ui-view></div>     
         </div>
-        <div>
-
-        </div>
-        <div>
-            <div class="col-lg-12">
-                <h2></h2>
-            </div>
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading" style="background-color: #4b0082;">
-                            <ul class="nav nav-pills">
-                                <li style="margin-top: 5px;">Turn number <span class="badge" style="margin-right: 15px;">{{game.turnNumber}}</span></li>
-                                <li style="margin-top: 5px; margin-right: 5px;">Mana cost:</li>
-                                <li ng-repeat="num in [] | range:10" ng-click="filterByCost(num)">
-                                    <span class="mana-icon"><img src="/src/images/mana.png" class="mana-icon-img"></span><span class="mana-icon-cost">{{num}}</span>
-                                </li>
-                                <li><span class="mana-icon"><img src="/src/images/mana.png" class="mana-icon-img"></span><span class="mana-icon-cost" style="left: 5px;">10</span></li>
-                            </ul>
-                        </div>
-                        <div class="panel-body">
-                            <ul class="list-group">
-                                <li class="list-group-item hs-list-item" ng-repeat="card in game.possibleCardsToPlay | orderBy:'-cost'" data-toggle="tooltip" title="{{card.image}}">
-                                    <div class="row card-row">
-                                        <div class="col-xs-1 cost">{{card.cost}}</div>
-                                        <div class="col-xs-10 name">{{card.name}}</div>
-                                        <!--<div class="col-xs-1 count">{{card.count}}</div>-->
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="panel panel-success">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Played Cards</h3>
-                        </div>
-                        <div class="panel-body">
-                            <ul class="list-group">
-
-                                <li class="list-group-item hs-list-item" ng-repeat="card in game.opponentCardsPlayed | reverse " data-toggle="tooltip" title="{{card.image}}">
-                                    <div class="row card-row">
-                                        <div class="col-xs-1 cost">{{card.cost}}</div>
-                                        <div class="col-xs-10 name">{{card.name}}</div>
-                                        <div class="col-xs-1 count">{{card.count}}</div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="panel panel-warning">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Possible Decks</h3>
-                            <label for="cardFilter">Filter by card</label>
-                            <input type="text" id="cardFilter" ng-model="cardName" />
-                        </div>
-                        <div class="panel-body">
-                            <ul class="list-group" id="decksList">
-                                <li class="list-group-item hs-list-item"  ng-show="deck.isVisible"  ng-repeat="deck in game.decks | orderBy:'-percentage' | filter:filterByCard(cardName)">
-                                    <div class="row deck-row">
-                                        <div class="col-xs-1 ">
-                                            <input type="checkbox" ng-model="deck.isChecked" ng-change="changeDeck(deck.link)" />
-                                        </div>
-                                        <div class="col-xs-1 percentage">{{deck.percentage}}</div>
-                                        <div class="col-xs-8 name hide-overflow" data-toggle="collapse" style="cursor: pointer;" data-target="#deck{{$index}}">{{deck.name}}</div>
-                                        <div class="col-xs-2 type">{{deck.type}}</div>
-                                    </div>
-                                    <div id="deck{{$index}}" class="collapse">
-                                        <ul class="list-group">
-                                            <li class="list-group-item hs-list-item card-image-tooltip"  ng-class="cardDisplayClass(card)" ng-repeat="card in deck.cards | orderBy:'cost'" data-toggle="tooltip" title="{{card.image}}">
-                                                <div class="row card-row">
-                                                    <div class="col-xs-1 cost">{{card.cost}}</div>
-                                                    <div class="col-xs-10 name">
-                                                        <div style="float: left;">{{card.name}}</div>
-                                                        <div class="card-image" style="background-image: url('{{card.imageUrl}}')"></div>
-                                                    </div>
-                                                    <div class="col-xs-1 count">{{card.count}}</div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+        
     </div>
-    <i class="fa fa-star"></i>
+
+    <script src="../bower_components/lodash/dist/lodash.min.js"></script>
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="../bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+
+    <script src="/src/app.js"></script>
+    <script src="/src/configuration/constants.js"></script>
+    <script src="/src/controllers/game.controller.js"></script>
+
+    <script src="/src/directives.js"></script>
+    <script src="/src/services/gameModels.js"></script>
+    <script src="/src/services/management.service.js"></script>
+    <script src="/src/services/game.service.js"></script>
+    <script src="http://localhost:8088/signalr/hubs"></script>
+
     <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
