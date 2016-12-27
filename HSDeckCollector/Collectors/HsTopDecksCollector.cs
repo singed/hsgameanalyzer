@@ -45,6 +45,9 @@ namespace HSDeckCollector.Collectors
                 {
                     try
                     {
+                        if (!link.Contains(DateTime.Now.ToString("MMMM").ToLower())) // only get decks from this month
+                            continue;
+
                         _navigationManager.GoToPage(link);
                         var deckInfo = _actionManager.TryFindElementsByJquery(".deck-info a");
 

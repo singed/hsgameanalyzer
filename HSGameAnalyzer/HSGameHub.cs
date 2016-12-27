@@ -18,12 +18,13 @@ namespace HSGameAnalyzer
     {
         public IEnumerable<HSDeckDto> GetDecks(string className)
         {
-            MongoRepository<HSDeck>_deckRepository = new MongoRepository<HSDeck>();
+            MongoRepository<HSDeck> _deckRepository = new MongoRepository<HSDeck>();
 
-            var decks = _deckRepository.Where(d => d.Class == className.ToUpper()).ToList();
+            var currentMetaDate = new DateTime(2016, 12, 1);
+            var decks = _deckRepository.Where(d => d.Class == className.ToUpper() && d.Date >= currentMetaDate).ToList();
             var decksDto = Mapper.Map<IEnumerable<HSDeckDto>>(decks);
 
-           // string serialized = JsonConvert.SerializeObject(decks);
+            // string serialized = JsonConvert.SerializeObject(decks);
 
             return decksDto;
             //Clients.All.applyDecks(decks);
@@ -48,7 +49,7 @@ namespace HSGameAnalyzer
                 entity.OpponentDeckMatch = gameDto.OpponentDeckMatch;
                 gameRepository.Update(entity);
             }
-            
+
         }
     }
 }

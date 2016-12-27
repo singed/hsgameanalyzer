@@ -25,7 +25,6 @@ namespace HSDeckCollector
 
             HsTopDecksCollector hsTopDecksCollector = new HsTopDecksCollector(navigationManager, actionManager);
             hsTopDecksCollector.Collect();
-
             Console.ReadKey();
         }
     }

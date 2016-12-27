@@ -13,7 +13,7 @@ var _getAllFilesFromFolder = function (dir) {
             if (stat && stat.isDirectory()) {
 
                 results = results.concat(_getAllFilesFromFolder(file))
-            } else if (file.indexOf('app.js') === -1 && file.indexOf('package.json') === -1) {
+            } else if (file.indexOf('app.js') === -1 && file.indexOf('package.json') === -1 && file.indexOf('info.txt') === -1) {
                 results.push(file.split("/")[1]);
             }
 
@@ -40,11 +40,17 @@ fs.readFile(files[0], 'utf8', function (err, data) {
     MongoClient.connect("mongodb://localhost:27017/HSDb", function (err, db) {
         if (err) { return console.dir(err); }
         cards = JSON.parse(data);
+		
         //  console.log(_.filter(cards, function(o) { return o.type === "HERO"; }));
-        cards = _.filter(cards, function (o) { return o.type !== "HERO"; });
+        cards = _.filter(cards, function (o) { return o.type !== "HERO" && o.id !== "PlaceholderCard"; });
         cards.map(function(elm) {
             elm.cardId = elm.id;
-			elm.name = elm.name.toUpperCase();
+			try{
+				elm.name = elm.name.toUpperCase();	
+			}
+			catch(e){
+				console.log(elm.cardId);
+			}
             delete elm.id;
         })
         //  console.log(cards.length + ' after');
