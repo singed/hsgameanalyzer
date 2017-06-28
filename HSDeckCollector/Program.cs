@@ -20,11 +20,16 @@ namespace HSDeckCollector
             var navigationManager = new NavigationManager(browser, "");
             var actionManager = new ActionManager(browser);
 
-            var hearthpwnCollector = new HearthpwnCollector(navigationManager, actionManager);
-            hearthpwnCollector.Collect();
+            TempoStormCollector collector = new TempoStormCollector(navigationManager, actionManager);
+            collector.Collect();
 
-            HsTopDecksCollector hsTopDecksCollector = new HsTopDecksCollector(navigationManager, actionManager);
-            hsTopDecksCollector.Collect();
+
+//
+//            var hearthpwnCollector = new HearthpwnCollector(navigationManager, actionManager);
+//            hearthpwnCollector.Collect();
+
+            //            HsTopDecksCollector hsTopDecksCollector = new HsTopDecksCollector(navigationManager, actionManager);
+            //            hsTopDecksCollector.Collect();
             Console.ReadKey();
         }
     }

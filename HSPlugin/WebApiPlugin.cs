@@ -19,16 +19,17 @@ namespace HSPlugin
 {
     public class WebApiPlugin : IPlugin
     {
-        WebApiUploader uploader;
+        WebApiUploader _uploader;
         private Guid _gameId;
         private bool _isGameJustStarted;
         public WebApiPlugin()
         {
             _isGameJustStarted = false;
-            uploader = new WebApiUploader();
+            _uploader = new WebApiUploader();
         }
         public void OnLoad()
         {
+
             GameEvents.OnTurnStart.Add(OnTurnStart);
           //  GameEvents.OnOpponentDraw.Add(OnOpponentDraw);
             GameEvents.OnOpponentPlay.Add(OnOpponentPlay);
@@ -195,7 +196,7 @@ namespace HSPlugin
         public void PublishMessage(HsGameMessage message)
         {
             var serializedString = JsonConvert.SerializeObject(message);
-            uploader.Send(serializedString);
+            _uploader.SendPost(serializedString);
         }
 
         public byte[] MessageToBytes(string message)

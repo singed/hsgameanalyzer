@@ -37,9 +37,6 @@
       <HintPath>..\packages\AutoMapper.5.1.1\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="HearthstoneDeckTracker">
-      <HintPath>E:\Projects\Hearthstone-Deck-Tracker-master\Hearthstone-Deck-Tracker-master\Hearthstone Deck Tracker\bin\Debug\HearthstoneDeckTracker.exe</HintPath>
-    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
       <Private>True</Private>

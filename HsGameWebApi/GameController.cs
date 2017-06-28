@@ -18,6 +18,21 @@ namespace HsGameWebApi
         {
             BusPublisher pub = new BusPublisher();
             pub.PublishMessage(message);
+            pub.Dispose();
+            return Request.CreateResponse(HttpStatusCode.OK, "ok");
+        }
+    }
+
+    public class EventController : ApiController
+    {
+        public HttpResponseMessage Get()
+        {
+            BusPublisher pub = new BusPublisher();
+            var msg = new HsGameMessage(HSGameEventTypes.OnGameStart) {
+                Data = null
+            };
+            pub.PublishMessage(msg);
+            pub.Dispose();
             return Request.CreateResponse(HttpStatusCode.OK, "ok");
         }
     }

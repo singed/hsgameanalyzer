@@ -9,7 +9,7 @@ using RabbitMQ.Client;
 
 namespace HsGameWebApi
 {
-    public class BusPublisher
+    public class BusPublisher : IDisposable
     {
 
         private const string HostName = "localhost";
@@ -22,6 +22,8 @@ namespace HsGameWebApi
         private IModel _model;
         private IBasicProperties _properties;
         private Guid _gameId;
+        private bool _disposed;
+
         public BusPublisher()
         {
             _factory = new ConnectionFactory
@@ -51,6 +53,29 @@ namespace HsGameWebApi
         public byte[] MessageToBytes(string message)
         {
             return Encoding.Default.GetBytes(message);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+            
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    // Clear all property values that maybe have been set
+                    // when the class was instantiated
+                    _model.Close();
+                    _connection.Close();
+                }
+
+                // Indicate that the instance has been disposed.
+                _disposed = true;
+            }
         }
     }
 }

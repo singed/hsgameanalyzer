@@ -76,6 +76,7 @@
   <ItemGroup>
     <Compile Include="Collectors\HearthpwnCollector.cs" />
     <Compile Include="Collectors\HsTopDecksCollector.cs" />
+    <Compile Include="Collectors\TempoStormCollector.cs" />
     <Compile Include="Core\Browser.cs" />
     <Compile Include="CustomExceptions.cs" />
     <Compile Include="Extensions\Common.cs" />
