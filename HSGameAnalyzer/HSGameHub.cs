@@ -21,7 +21,7 @@ namespace HSGameAnalyzer
             MongoRepository<HSDeck> _deckRepository = new MongoRepository<HSDeck>();
 
             var currentMetaDate = new DateTime(2017, 3, 1);
-            var decks = _deckRepository.Where(d => d.Class == className.ToUpper() && d.Date >= currentMetaDate).ToList();
+            var decks = _deckRepository.Where(x=>x.Class == className /* && d.Date >= currentMetaDate*/).ToList();
             var decksDto = Mapper.Map<IEnumerable<HSDeckDto>>(decks);
 
             // string serialized = JsonConvert.SerializeObject(decks);

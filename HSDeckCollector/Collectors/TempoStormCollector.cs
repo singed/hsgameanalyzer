@@ -12,7 +12,7 @@ namespace HSDeckCollector.Collectors
 {
     public class TempoStormCollector
     {
-        const string SiteUrl = "https://tempostorm.com/hearthstone/meta-snapshot/standard/2017-06-05";
+        const string SiteUrl = "https://tempostorm.com/hearthstone/meta-snapshot/standard/2017-06-18";
 
         private readonly NavigationManager _navigationManager;
         private readonly ActionManager _actionManager;
@@ -31,6 +31,7 @@ namespace HSDeckCollector.Collectors
         public void Collect()
         {
             int decksCollected = 0;
+            int deckId = 0;
             _navigationManager.GoToPage(SiteUrl);
 
             var tiers = _actionManager.TryFindElementsByJquery(".tiers .tier");
@@ -44,7 +45,8 @@ namespace HSDeckCollector.Collectors
                 var decksList = _actionManager.TryFindElementsByJquery(tierId + " .tier-body .tier-deck");
                 for (int index = 0; index < decksList.Count; index++)
                 {
-                    var buttonId = $"#deck{index + 1} button";
+                    deckId ++ ;
+                    var buttonId = $"#deck{deckId} button";
                     var button = _actionManager.TryFindElementByJquery(buttonId);
                     button.Click();
                     ParentManager.Driver.SwitchTo().Window(ParentManager.Driver.WindowHandles.Last());
